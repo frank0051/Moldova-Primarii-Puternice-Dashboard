@@ -30,7 +30,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold tracking-wide uppercase">Moldova: Primării Puternice Dashboard</h1>
-                <p class="text-xs text-sky-100 opacity-90">Tracking Local Public Administration Reform (Updated: 16 July 2026)</p>
+                <p class="text-xs text-sky-100 opacity-90">Tracking Local Public Administration Reform (Updated: <span id="last-updated"></span>)</p>
             </div>
         </div>
     </header>
@@ -206,6 +206,9 @@
         // Main Core Execution Loop
         function initDashboard() {
 			const csvUrl = "https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/Pipeline.csv";
+			
+			updateLastUpdatedDate(csvUrl);
+			
             Papa.parse(csvUrl, {
 				download: true,
                 header: true,
@@ -295,6 +298,104 @@
 
             renderClusterCards(filtered);
         }
+		
+		// Dynamically fetches and updates the "Last Updated" display using GitHub metadata
+		// Helper to automatically convert your raw.githubusercontent.com URL into a GitHub Commits API URL
+		function getGitHubApiUrl(rawURL) {
+			try {
+				const url = new URL(rawURL);
+				if (url.hostname === 'raw.githubusercontent.com') {
+					const parts = url.pathname.split('/').filter(Boolean);
+					const owner = parts[0];
+					const repo = parts[1];
+					
+					// Check for the "refs/heads/" URL structure
+					let branchIndex = 2;
+					if (parts[2] === 'refs' && parts[3] === 'heads') {
+						branchIndex = 4;
+					}
+					
+					const branch = parts[branchIndex];
+					const filePath = parts.slice(branchIndex + 1).join('/');
+					
+					return `https://api.github.com/repos/${owner}/${repo}/commits?path=${filePath}&sha=${branch}&per_page=1`;
+				}
+			} catch (e) {
+				console.error("Error parsing rawURL for GitHub API:", e);
+			}
+			return null;
+		}
+
+		async function updateLastUpdatedDate(rawURL) {
+			let dateToUse = null;
+
+			// 1. Primary Method: Fetch the exact commit timestamp from GitHub's Commits API
+			try {
+				const apiURL = getGitHubApiUrl(rawURL);
+				if (apiURL) {
+					const response = await fetch(apiURL);
+					if (response.ok) {
+						const commits = await response.json();
+						if (commits && commits.length > 0) {
+							dateToUse = new Date(commits[0].commit.committer.date);
+							//console.log("Date successfully fetched from GitHub Commits API:", dateToUse);
+						}
+					} else {
+						console.warn(`GitHub Commits API returned status ${response.status}. Trying fallbacks.`);
+					}
+				}
+			} catch (error) {
+				console.warn("GitHub Commits API failed. Trying fallbacks:", error);
+			}
+
+			// 2. Secondary Fallback: Fetch relative path directly from the same-origin GitHub Pages server
+			// (GitHub Pages servers DO send the Last-Modified header correctly on relative fetches!)
+			if (!dateToUse) {
+				try {
+					// Converts the absolute URL's trailing part to standard relative path "./data/Pipeline.csv"
+					const relativePath = "./data/Pipeline.csv"; 
+					const response = await fetch(relativePath, { method: 'HEAD' });
+					const lastModified = response.headers.get('Last-Modified');
+					if (lastModified) {
+						dateToUse = new Date(lastModified);
+						//console.log("Date successfully fetched from same-origin HEAD request:", dateToUse);
+					}
+				} catch (error) {
+					console.warn("Failed same-origin relative check. Trying final fallback:", error);
+				}
+			}
+
+			// 3. Tertiary Fallback: Attempt HEAD request on rawURL directly (as written in your original code)
+			if (!dateToUse) {
+				try {
+					const response = await fetch(rawURL, { method: 'HEAD' });
+					const lastModified = response.headers.get('Last-Modified');
+					if (lastModified) {
+						dateToUse = new Date(lastModified);
+						//console.log("Date successfully fetched from rawURL HEAD request:", dateToUse);
+					}
+				} catch (error) {
+					console.warn("All date retrieval methods failed:", error);
+				}
+			}
+
+			// 4. Format and render to the UI
+			if (dateToUse && !isNaN(dateToUse.getTime())) {
+				const day = dateToUse.getDate();
+				const month = dateToUse.toLocaleDateString('en-US', { month: 'long' });
+				const year = dateToUse.getFullYear();
+				const formattedDate = `${day} ${month} ${year}`; // Formats to: "16 July 2026"
+				
+				const element = document.getElementById('last-updated');
+				if (element) {
+					element.innerText = formattedDate;
+				}
+			} else {
+				console.warn("Could not determine Last-Modified date. Keeping static HTML fallback.");
+			}
+		}
+
+
 
         // Maps data fields onto the requested showcase markup structure
         function renderClusterCards(data) {
