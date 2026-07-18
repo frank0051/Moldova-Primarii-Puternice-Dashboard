@@ -756,8 +756,20 @@ function fnc_project_color(values, context) {
 };
 
 
+function exp_uat3_post2025mergers_1rule0_eval_expression(context) {
+    // Pop_2024 < 3000 and Pop_2024 >=1500 AND Sheet1_Cluster_ID IS NULL
 
-function exp_uat3_post2025mergers_1rule1_eval_expression(context) {
+    var feature = context.feature;
+    
+    if (feature.properties) {
+        return ((feature.properties['Pop_2024']  < 3000) && (feature.properties['Pop_2024']  >= 1500) && (feature.properties['Sheet1_Cluster_ID']  === null));
+    } else {
+        return ((feature['Pop_2024']  < 3000) && (feature['Pop_2024']  >= 1500) && (feature['Sheet1_Cluster_ID']  === null));
+    }
+}
+
+
+function exp_uat3_post2025mergers_1rule2_eval_expression(context) {
     // cuatm  IN (9998, 9999)
 
     var feature = context.feature;
@@ -770,7 +782,7 @@ function exp_uat3_post2025mergers_1rule1_eval_expression(context) {
 }
 
 
-function exp_uat3_post2025mergers_1rule2_eval_expression(context) {
+function exp_uat3_post2025mergers_1rule1_eval_expression(context) {
     // Sheet1_Cluster_ID
 
     var feature = context.feature;
@@ -779,5 +791,17 @@ function exp_uat3_post2025mergers_1rule2_eval_expression(context) {
         return feature.properties['Sheet1_Cluster_ID'] ;
     } else {
         return feature['Sheet1_Cluster_ID'] ;
+    }
+}
+
+function exp_uat3_post2025mergers_1rule3_eval_expression(context) {
+    // Pop_2024 <1500 AND Sheet1_Cluster_ID IS NULL
+
+    var feature = context.feature;
+    
+    if (feature.properties) {
+        return ((feature.properties['Pop_2024']  < 1500) && (feature.properties['Sheet1_Cluster_ID']  === null));
+    } else {
+        return ((feature['Pop_2024']  < 1500) && (feature['Sheet1_Cluster_ID']  === null));
     }
 }
