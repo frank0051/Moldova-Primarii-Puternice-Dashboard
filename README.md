@@ -13,15 +13,14 @@ The dashboard is optimized for web deployment and can be viewed live via GitHub 
 
 ## ✨ Key Features
 
-* **🗺️ Interactive Territorial Mergers Map:** A responsive Leaflet-powered map (exported via QGIS) showcasing the active borders of validated voluntary clusters.
+* **🗺️ Interactive Territorial Mergers Map:** A responsive Leaflet-powered map (exported via QGIS) showcasing the active borders of validated voluntary clusters. This map is dyanmic based on the raion drop-down filter being used (zoom-in) or the cluster card being clicked (zoom-in and dim surrounding areas). 
 * **📈 Dynamic Top-Level KPIs:** Real-time summary metrics parsing global counts for:
 * Total strong clusters formed.
 * Number of individual local governments joining the initiative.
 * Consolidated citizens supported by the reform.
 * Total financial stimulus packages invested by the central government.
 
-
-* **🌍 Integrated Spatial Area Tracker:** A dedicated map-side metric displaying the total territorial scope covered ($\text{km}^2$), computed directly from structural spatial features.
+* **🌍 Integrated Map Area Tracker:** A dedicated map-side metric displaying the total territorial scope covered ($\text{km}^2$), computed directly from structural spatial features.
 * **🏛️ Political Landscape Profiler:** Minimalist card integration displaying the political affiliations of both the sitting **Mayors** and **Council majorities** involved in each cluster without interface clutter.
 * **🎯 Dynamic Raion Filtering:** Automatically extracts unique entries from the data stream to generate an alphabetical, diacritic-safe filter menu—eliminating hardcoded lists.
 * **🔗 Source Verification:** Direct anchor links embedded within cluster showcase cards routing users straight to government announcements and local council press releases.
