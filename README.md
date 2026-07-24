@@ -25,6 +25,16 @@ The dashboard is optimized for web deployment and can be viewed live via GitHub 
 * **🎯 Dynamic Raion Filtering:** Automatically extracts unique entries from the data stream to generate an alphabetical, diacritic-safe filter menu—eliminating hardcoded lists.
 * **🔗 Source Verification:** Direct anchor links embedded within cluster showcase cards routing users straight to government announcements and local council press releases.
 
+### 🗳️ Political Matrix & Alignment Tracking (`clusterpolitics.html`)
+* **Dual-Perspective Analysis:** Seamlessly toggle between **Council Dominance** (default) and **Mayor Affiliation** modes to compare local governance dynamics.
+* **Macro Political KPIs:** Live aggregate stats tracking 100% monocolor clusters, single-party majorities, and unified mayor/council alignments across the entire reform dataset.
+* **Alignment Classification:** Automated categorization of clusters into:
+  * 🟢 **100% Monocolor:** Every LPA in the cluster shares identical political leadership.
+  * 🔵 **Single-Party Majority:** More than 50% of constituent LPAs share a single party.
+  * 🟡 **Cross-Party / Split:** Mixed political leadership or split local councils.
+* **Interactive Matrix & Filtering:** Search by cluster name or constituent LPA, filter by Raion and alignment category, and sort dynamic party columns (PAS, PSRM, PSDE, PDCM, PDMM, PLDM, Independents, Others).
+* **Constituent Drill-Down:** Expandable row accordions revealing individual LPA CUTAM codes, 2024 population figures, mayor party affiliations, and council majority breakdowns.
+
 ---
 
 ## 📊 Data Pipeline Architecture
@@ -52,6 +62,10 @@ The core business logic, KPIs, and text showcases are powered by this flat CSV f
 ### 2. QGIS GeoJSON Layer (`uat3_post2025mergers_1.js`)
 
 Handles spatial polygon attributes and coordinate parsing. The dashboard dynamically matches features by joining the CSV's `Cluster_Name` with the map's structural `Sheet1_Cluster_ID`.
+
+### 3. individual_lpas.csv
+
+This is a file that presents one row for every LPA rather than one row for each cluster. This is used for the political party matrix on clusterpolitics.html.
 
 ---
 
@@ -101,6 +115,6 @@ npx serve .
 
 To add or modify validated clusters:
 
-1. Open **`Pipeline.csv`** in any text editor or spreadsheet manager.
+1. Open **`Pipeline.csv`** and **`individual_lpas.csv`** in any text editor or spreadsheet manager.
 2. Append a new row or update existing columns ensuring strict compliance with the column header schemas (separating participating communities with a `;`).
 3. Commit and push the changes directly to the `main` branch. The live GitHub Pages dashboard will update automatically within minutes.
