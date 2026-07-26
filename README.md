@@ -18,7 +18,10 @@ The dashboard is optimized for web deployment and can be viewed live via GitHub 
 * Total strong clusters formed.
 * Number of individual local governments joining the initiative.
 * Consolidated citizens supported by the reform.
-* Total financial stimulus packages invested by the central government.
+* Total financial stimulus packages invested by the central government
+* A broader **Decision Tracker Pipeline** to track the decision stage of each LPA as it navigates the voluntary amalgamation process. 
+
+Driven directly by real-time decision tracking (`decision_tracker.csv`), this interactive chevron pipeline tracks the decision-making lifecycle of subnational municipal bodies across 6 distinct legal and administrative stages.
 
 * **🌍 Integrated Map Area Tracker:** A dedicated map-side metric displaying the total territorial scope covered ($\text{km}^2$), computed directly from structural spatial features.
 * **🏛️ Political Landscape Profiler:** Minimalist card integration displaying the political affiliations of both the sitting **Mayors** and **Council majorities** involved in each cluster without interface clutter.
