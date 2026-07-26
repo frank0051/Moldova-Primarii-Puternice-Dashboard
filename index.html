@@ -204,7 +204,7 @@
 <!-- ZONE 2: LEFT-SIDE GEOGRAPHIC MAP -->
 			<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 lg:col-span-5 flex flex-col lg:sticky lg:top-6 h-fit">
 				<div class="flex justify-between items-center mb-3">
-					<h2 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Geographic Map Context</h2>
+					<h2 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Valid Clusters Map</h2>
 					<div class="flex items-center space-x-2">
 						<!-- INJECTED DYNAMIC RESET BUTTON -->
 						<button id="btn-reset-map" class="text-xs text-gray-400 hover:text-red-500 font-bold tracking-wide transition-colors hidden" onclick="resetDashboardMapState()">Clear Selection ↺</button>
@@ -1052,12 +1052,15 @@
 					let totalFilteredLPAs = 0;
 
 					// Excluded Raions (Column 1 filter)
-					const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
+					//const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
 
 					data.forEach(row => {
 						// 1. Column 1 Filter: Check Raion_Name
-						const raion = (row['Raion_Name'] || '').trim();
-						if (excludedRaions.includes(raion)) {
+						//const raion = (row['Raion_Name'] || '').trim();
+						//if (excludedRaions.includes(raion)) {
+						//	return; // Exclude this record
+						//}
+						if (row['In-Scope']=="FALSE") {
 							return; // Exclude this record
 						}
 
