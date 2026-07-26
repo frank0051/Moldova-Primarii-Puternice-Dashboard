@@ -138,18 +138,51 @@
         </div>
 
 		<!--Broader Pipeline Tracker -->
+		<!-- SLIM LPA PIPELINE TRACKER WITH POPULATION TOGGLE -->
 		<section class="bg-white px-4 py-2.5 rounded-xl shadow-sm border border-slate-200 text-xs my-4">
-			<div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+			<!-- Inline Title, Population Filter Toggle, & Total Summary -->
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-100">
+				<!-- Title -->
 				<div class="flex items-center gap-2">
-					<span class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">LPA Amalgamation Pipeline</span>
+					<span class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">Primării Puternice Pipeline</span>
+					<span class="text-slate-400 text-[11px] md:inline">Experimental; includes all LPAs (except Găgăuzia & Mun. Chisinau) - regardless of if cluster is adopted by all members.</span>
 				</div>
-				<div class="text-[11px] text-slate-500 font-medium">
-					Experimental section; includes all LPAs (except Găgăuzia & Mun. Chisinau) - regardless of if the cluster is fully adopted by all members.
+
+				<!-- Right Side Controls: Population Toggle + Total Counter -->
+				<div class="flex items-center gap-3">
+					<!-- Population Toggle Pill Bar -->
+					<div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 text-[11px] font-medium text-slate-600">
+						<button type="button" 
+								onclick="setPipelinePopFilter('all')" 
+								id="pop-filter-all" 
+								class="pop-filter-btn px-2.5 py-0.5 rounded-md font-semibold transition-all bg-white text-blue-700 shadow-sm border border-slate-200/60">
+							All
+						</button>
+						<button type="button" 
+								onclick="setPipelinePopFilter(3000)" 
+								id="pop-filter-3000" 
+								class="pop-filter-btn px-2.5 py-0.5 rounded-md transition-all text-slate-600 hover:text-slate-900 border border-transparent">
+							&lt; 3,000
+						</button>
+						<button type="button" 
+								onclick="setPipelinePopFilter(1500)" 
+								id="pop-filter-1500" 
+								class="pop-filter-btn px-2.5 py-0.5 rounded-md transition-all text-slate-600 hover:text-slate-900 border border-transparent">
+							&lt; 1,500
+						</button>
+					</div>
+
+					<!-- Total Counter -->
+					<div class="text-[11px] text-slate-500 font-medium whitespace-nowrap">
+						Total Tracked: <strong id="pipeline-total-lpas" class="text-slate-900 font-bold">0</strong> LPAs
+					</div>
 				</div>
 			</div>
 
+			<!-- Chevron Pipeline Flow -->
 			<div class="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-1 scrollbar-none">
 				
+				<!-- Stage 0 -->
 				<div class="flex-1 min-w-[120px] bg-slate-100 border border-slate-200/80 rounded px-2 py-1 flex items-center justify-between">
 					<span class="text-slate-600 font-medium truncate text-[11px]" title="0. Unclear / Not Started">0. Unclear</span>
 					<span id="stage-0-count" class="ml-1.5 font-bold text-slate-800 text-xs px-1.5 py-0.5 bg-white rounded border border-slate-200">0</span>
@@ -157,6 +190,7 @@
 
 				<i class="fa-solid fa-chevron-right text-slate-300 text-[10px] shrink-0"></i>
 
+				<!-- Stage 1 -->
 				<div class="flex-1 min-w-[120px] bg-sky-50 border border-sky-200/80 rounded px-2 py-1 flex items-center justify-between">
 					<span class="text-sky-800 font-medium truncate text-[11px]" title="1. Initiated">1. Initiated</span>
 					<span id="stage-1-count" class="ml-1.5 font-bold text-sky-900 text-xs px-1.5 py-0.5 bg-white rounded border border-sky-200">0</span>
@@ -164,20 +198,23 @@
 
 				<i class="fa-solid fa-chevron-right text-slate-300 text-[10px] shrink-0"></i>
 
+				<!-- Stage 2 -->
 				<div class="flex-1 min-w-[120px] bg-amber-50 border border-amber-200/80 rounded px-2 py-1 flex items-center justify-between">
-					<span class="text-amber-800 font-medium truncate text-[11px]" title="2. Working Group">2. Working Group</span>
+					<span class="text-amber-800 font-medium truncate text-[11px]" title="2. Working Group">2. Work Group</span>
 					<span id="stage-2-count" class="ml-1.5 font-bold text-amber-900 text-xs px-1.5 py-0.5 bg-white rounded border border-amber-200">0</span>
 				</div>
 
 				<i class="fa-solid fa-chevron-right text-slate-300 text-[10px] shrink-0"></i>
 
+				<!-- Stage 3 -->
 				<div class="flex-1 min-w-[120px] bg-indigo-50 border border-indigo-200/80 rounded px-2 py-1 flex items-center justify-between">
-					<span class="text-indigo-800 font-medium truncate text-[11px]" title="3. Draft Consultation">3. Draft in Consultation</span>
+					<span class="text-indigo-800 font-medium truncate text-[11px]" title="3. Draft Consultation">3. Draft Consult</span>
 					<span id="stage-3-count" class="ml-1.5 font-bold text-indigo-900 text-xs px-1.5 py-0.5 bg-white rounded border border-indigo-200">0</span>
 				</div>
 
 				<i class="fa-solid fa-chevron-right text-slate-300 text-[10px] shrink-0"></i>
 
+				<!-- Stage 4 -->
 				<div class="flex-1 min-w-[120px] bg-purple-50 border border-purple-200/80 rounded px-2 py-1 flex items-center justify-between">
 					<span class="text-purple-800 font-medium truncate text-[11px]" title="4. Final Meeting Scheduled">4. Meeting Sched.</span>
 					<span id="stage-4-count" class="ml-1.5 font-bold text-purple-900 text-xs px-1.5 py-0.5 bg-white rounded border border-purple-200">0</span>
@@ -185,6 +222,7 @@
 
 				<i class="fa-solid fa-chevron-right text-slate-300 text-[10px] shrink-0"></i>
 
+				<!-- Stage 5 -->
 				<div class="flex-1 min-w-[120px] bg-emerald-50 border border-emerald-300 rounded px-2 py-1 flex items-center justify-between">
 					<div class="flex items-center gap-1 truncate">
 						<i class="fa-solid fa-check text-[10px] text-emerald-600"></i>
@@ -204,7 +242,7 @@
 <!-- ZONE 2: LEFT-SIDE GEOGRAPHIC MAP -->
 			<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 lg:col-span-5 flex flex-col lg:sticky lg:top-6 h-fit">
 				<div class="flex justify-between items-center mb-3">
-					<h2 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Valid Clusters Map</h2>
+					<h2 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Validated Clusters Map</h2>
 					<div class="flex items-center space-x-2">
 						<!-- INJECTED DYNAMIC RESET BUTTON -->
 						<button id="btn-reset-map" class="text-xs text-gray-400 hover:text-red-500 font-bold tracking-wide transition-colors hidden" onclick="resetDashboardMapState()">Clear Selection ↺</button>
@@ -314,7 +352,7 @@
 	<footer class="bg-gray-800 text-gray-400 text-xs px-6 py-4 flex flex-col sm:flex-row justify-between items-center mt-auto border-t border-gray-700">
 		<div class="space-y-1 text-left">
 			<p>Data based on public press releases. For official information visit <a href="https://primariiputernice.gov.md/" class="text-sky-400 hover:underline">https://primariiputernice.gov.md/</a></p>
-			<p>Frank Bracco, 2026. MIT License. Also uses Leaflet, PapaParse, and tailwindcss under permissive open source licensing.</p>
+			<p>Frank Bracco, 2026. MIT License. Also uses Leaflet, PapaParse, and tailwindcss under permissive open source licensing. <a style="text-decoration: underline;" href="https://github.com/frank0051/Moldova-Primarii-Puternice-Dashboard/issues">Report issues on Github.</a></p>
 		</div>
 	</footer>
 
@@ -1039,70 +1077,21 @@
 		}
 		
 		// Function to load and process decision_tracker.csv for the Chevron Pipeline Tracker
+		// Global variables for pipeline data & active population filter
+		let rawPipelineData = [];
+		let currentPopFilter = 'all'; // Active filter state: 'all', 3000, or 1500
+
+		/**
+		 * Loads decision_tracker.csv once and triggers initial render
+		 */
 		function loadPipelineTrackerData() {
 			Papa.parse('https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/decision_tracker.csv', {
 				download: true,
 				header: true,
 				skipEmptyLines: true,
 				complete: function(results) {
-					const data = results.data;
-
-					// Pipeline stage accumulators
-					const stageCounts = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-					let totalFilteredLPAs = 0;
-
-					// Excluded Raions (Column 1 filter)
-					//const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
-
-					data.forEach(row => {
-						// 1. Column 1 Filter: Check Raion_Name
-						//const raion = (row['Raion_Name'] || '').trim();
-						//if (excludedRaions.includes(raion)) {
-						//	return; // Exclude this record
-						//}
-						if (row['In-Scope']=="FALSE") {
-							return; // Exclude this record
-						}
-
-						totalFilteredLPAs++;
-
-						// 2. Column 13 Processing: Final_Status
-						const finalStatus = (row['Final_Status'] || '').trim();
-
-						// Categorize based on leading stage digit (0 to 5)
-						if (finalStatus.startsWith('0')) {
-							stageCounts[0]++;
-						} else if (finalStatus.startsWith('1')) {
-							stageCounts[1]++;
-						} else if (finalStatus.startsWith('2')) {
-							stageCounts[2]++;
-						} else if (finalStatus.startsWith('3')) {
-							stageCounts[3]++;
-						} else if (finalStatus.startsWith('4')) {
-							stageCounts[4]++;
-						} else if (finalStatus.startsWith('5')) {
-							stageCounts[5]++;
-						} else {
-							// Default fallback for unassigned/empty statuses
-							stageCounts[0]++;
-						}
-					});
-
-					// 3. Populate Option A DOM Elements
-					const totalEl = document.getElementById('pipeline-total-lpas');
-					if (totalEl) totalEl.textContent = totalFilteredLPAs;
-
-					for (let stage = 0; stage <= 5; stage++) {
-						const badgeEl = document.getElementById(`stage-${stage}-count`);
-						if (badgeEl) {
-							badgeEl.textContent = stageCounts[stage];
-						}
-					}
-
-					console.log('Pipeline Tracker Updated:', {
-						totalTrackedLPAs: totalFilteredLPAs,
-						breakdown: stageCounts
-					});
+					rawPipelineData = results.data;
+					renderPipelineTracker();
 				},
 				error: function(err) {
 					console.error('Error reading decision_tracker.csv:', err);
@@ -1110,7 +1099,82 @@
 			});
 		}
 
-		// Trigger loading on page ready
+		/**
+		 * Handles population filter button toggles
+		 * @param {'all'|number} filterValue - 'all', 3000, or 1500
+		 */
+		function setPipelinePopFilter(filterValue) {
+			currentPopFilter = filterValue;
+
+			// Update active button CSS states
+			const btnMap = { 'all': 'pop-filter-all', 3000: 'pop-filter-3000', 1500: 'pop-filter-1500' };
+
+			Object.keys(btnMap).forEach(key => {
+				const btn = document.getElementById(btnMap[key]);
+				if (!btn) return;
+
+				const isSelected = (key === 'all' && currentPopFilter === 'all') || (Number(key) === currentPopFilter);
+
+				if (isSelected) {
+					btn.className = "pop-filter-btn px-2.5 py-0.5 rounded-md font-semibold transition-all bg-white text-blue-700 shadow-sm border border-slate-200/60";
+				} else {
+					btn.className = "pop-filter-btn px-2.5 py-0.5 rounded-md transition-all text-slate-600 hover:text-slate-900 border border-transparent";
+				}
+			});
+
+			// Re-render counts instantly with active filter
+			renderPipelineTracker();
+		}
+
+		/**
+		 * Filters the dataset and calculates counts for each pipeline stage
+		 */
+		function renderPipelineTracker() {
+			if (!rawPipelineData || rawPipelineData.length === 0) return;
+
+			const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
+			const stageCounts = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+			let totalFilteredLPAs = 0;
+
+			rawPipelineData.forEach(row => {
+				// 1. Exclude Raions (Column 1)
+				const raion = (row['Raion_Name'] || '').trim();
+				if (excludedRaions.includes(raion)) return;
+
+				// 2. Population Filter (Pop_2024 column)
+				const popRaw = row['Pop_2024'] ? row['Pop_2024'].toString().replace(/,/g, '').trim() : '0';
+				const popVal = parseFloat(popRaw) || 0;
+
+				if (currentPopFilter === 3000 && popVal >= 3000) return;
+				if (currentPopFilter === 1500 && popVal >= 1500) return;
+
+				totalFilteredLPAs++;
+
+				// 3. Stage Status Breakdown (Column 13: Final_Status)
+				const finalStatus = (row['Final_Status'] || '').trim();
+				if (finalStatus.startsWith('0')) stageCounts[0]++;
+				else if (finalStatus.startsWith('1')) stageCounts[1]++;
+				else if (finalStatus.startsWith('2')) stageCounts[2]++;
+				else if (finalStatus.startsWith('3')) stageCounts[3]++;
+				else if (finalStatus.startsWith('4')) stageCounts[4]++;
+				else if (finalStatus.startsWith('5')) stageCounts[5]++;
+				else stageCounts[0]++;
+			});
+
+			// Update UI Total Count Badge
+			const totalEl = document.getElementById('pipeline-total-lpas');
+			if (totalEl) totalEl.textContent = totalFilteredLPAs.toLocaleString();
+
+			// Update Chevron Badges
+			for (let stage = 0; stage <= 5; stage++) {
+				const badgeEl = document.getElementById(`stage-${stage}-count`);
+				if (badgeEl) {
+					badgeEl.textContent = stageCounts[stage].toLocaleString();
+				}
+			}
+		}
+
+		// Initialize on page load
 		document.addEventListener('DOMContentLoaded', loadPipelineTrackerData);
 				
         </script>
