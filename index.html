@@ -333,6 +333,8 @@
                         
                         <select id="sort-by" class="bg-gray-50 border border-gray-300 text-gray-700 text-xs rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" onchange="processData()">
                             <option value="default">Default Order</option>
+							<option value="name-asc">Alphabetical (A–Z)</option>
+							<option value="name-desc">Alphabetical (Z–A)</option>
                             <option value="pop-high">Highest Population</option>
                             <option value="fin-high">Highest Financial Package</option>
                         </select>
@@ -458,11 +460,15 @@
                 filtered = filtered.filter(item => item.Region_Raion === regionFilter);
             }
 
-            if (sortBy === 'pop-high') {
-                filtered.sort((a, b) => b.Combined_Population - a.Combined_Population);
-            } else if (sortBy === 'fin-high') {
-                filtered.sort((a, b) => b.Financial_Stimulus_MDL - a.Financial_Stimulus_MDL);
-            }
+			if (sortBy === 'pop-high') {
+				filtered.sort((a, b) => b.Combined_Population - a.Combined_Population);
+			} else if (sortBy === 'fin-high') {
+				filtered.sort((a, b) => b.Financial_Stimulus_MDL - a.Financial_Stimulus_MDL);
+			} else if (sortBy === 'name-asc') {
+				filtered.sort((a, b) => (a.Cluster_Name || '').localeCompare(b.Cluster_Name || '', 'ro'));
+			} else if (sortBy === 'name-desc') {
+				filtered.sort((a, b) => (b.Cluster_Name || '').localeCompare(a.Cluster_Name || '', 'ro'));
+			}
 
             renderClusterCards(filtered);
 			
