@@ -23,6 +23,38 @@
 </head>
 <body class="bg-gray-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
+<!-- Welcome Announcement Modal -->
+<div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 mx-4 relative transform transition-all">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center pb-3 border-b border-gray-200">
+      <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+        <span>📢</span> Announcement & Disclaimer
+      </h3>
+      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none">&times;</button>
+    </div>
+
+    <!-- Announcement Content -->
+    <div class="py-4 text-xs text-gray-600 space-y-3 max-h-80 overflow-y-auto">
+      <p class="font-medium text-gray-700">Welcome to the PRIMĂRII PUTERNICE dashboard!</p>
+      <p>Please note the following important announcements and disclaimers before proceeding:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>On 28 July 2026, Parliament set an official, legal deadline for this round of voluntary amalgmation to ensure all changes are made with ample time before elections. The legal deadline for LPAs to submit is now 31 August 2026.</li>
+        <li>This document utilizes the local decisions register and press releases to monitor progress bottom-up; as such, this dashboard lags official "aggregate" number announcements.</li>
+      </ul>
+    </div>
+
+    <!-- Footer / Actions -->
+    <div class="pt-3 border-t border-gray-200 flex justify-end">
+      <button onclick="closeModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+        I Understand
+      </button>
+    </div>
+
+  </div>
+</div>
+
     <!-- HEADER NAVIGATION BAR -->
     <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -325,7 +357,7 @@
                         name: row.Cluster_Name,
                         raion: row.Raion,
                         lpas: [],
-                        parties: { PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0, 'No Majority': 0, Other: 0 }
+                        parties: { PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0,  Other: 0, 'No Majority': 0 }
                     };
                 }
                 clusterMap[cid].lpas.push(row);
@@ -387,8 +419,8 @@
 					${sortHeader('PDCM', 'PDCM', 'bg-purple-50/80 text-purple-900 border-r border-purple-200/60')}
 					${sortHeader('PDMM', 'PDMM', 'bg-teal-50/80 text-teal-900 border-r border-teal-200/60')}
 					${sortHeader('PLDM', 'PLDM', 'bg-green-50/80 text-green-900 border-r border-green-200/60')}
-					${showNoMaj ? sortHeader('No Majority', 'No Majority', 'bg-orange-50/80 text-orange-900 border-r border-orange-200/60') : ''}
 					${sortHeader('Other', 'Other', 'bg-zinc-100 text-zinc-800 border-r border-zinc-200')}
+					${showNoMaj ? sortHeader('No Majority', 'No Majority', 'bg-orange-50/80 text-orange-900 border-r border-orange-200/60') : ''}
 					${sortHeader('alignment', 'Alignment Status', 'text-left')}
 					<th class="py-3.5 px-3 text-center">Details</th>
 				</tr>
@@ -458,7 +490,7 @@
 			});
 
             tbody.innerHTML = '';
-            const totals = { lpas: 0, PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0, 'No Majority': 0, Other: 0 };
+            const totals = { lpas: 0, PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0, Other: 0 , 'No Majority': 0};
             const showNoMaj = (currentMatrixMode === 'council');
             const totalCols = showNoMaj ? 13 : 12;
 
@@ -494,8 +526,9 @@
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PDCM, 'bg-purple-100 text-purple-800 border-purple-300')}</td>
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PDMM, 'bg-teal-100 text-teal-800 border-teal-300')}</td>
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PLDM, 'bg-green-100 text-green-800 border-green-300')}</td>
+						<td class="py-3 px-3 text-center">${renderCellBadge(c.parties.Other, 'bg-zinc-200 text-zinc-800 border-zinc-300')}</td>
                         ${showNoMaj ? `<td class="py-3 px-3 text-center">${renderCellBadge(c.parties['No Majority'], 'bg-orange-100 text-orange-800 border-orange-300')}</td>` : ''}
-                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.Other, 'bg-zinc-200 text-zinc-800 border-zinc-300')}</td>
+                        
                         <td class="py-3 px-4">${alignment.badge}</td>
                         <td class="py-3 px-2 text-center">
                             <button onclick="toggleRowAccordion('${c.id}')" class="px-1 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded text-[11px] font-semibold transition-colors">
@@ -546,8 +579,9 @@
                     <td class="py-3 px-3 text-center font-bold text-purple-900">${totals.PDCM}</td>
                     <td class="py-3 px-3 text-center font-bold text-teal-900">${totals.PDMM}</td>
                     <td class="py-3 px-3 text-center font-bold text-green-900">${totals.PLDM}</td>
+					<td class="py-3 px-3 text-center font-bold text-zinc-800">${totals.Other}</td>
                     ${showNoMaj ? `<td class="py-3 px-3 text-center font-bold text-orange-900">${totals['No Majority']}</td>` : ''}
-                    <td class="py-3 px-3 text-center font-bold text-zinc-800">${totals.Other}</td>
+
                     <td colspan="2" class="py-3 px-4 text-[11px] font-normal text-slate-500">Sums updated across active view filters</td>
                 </tr>
                 <tr class="bg-slate-50/80 text-slate-600 font-semibold text-[11px]">
@@ -560,8 +594,8 @@
                     <td class="py-2.5 px-3 text-center text-purple-800">${formatPct(totals.PDCM)}</td>
                     <td class="py-2.5 px-3 text-center text-teal-800">${formatPct(totals.PDMM)}</td>
                     <td class="py-2.5 px-3 text-center text-green-800">${formatPct(totals.PLDM)}</td>
+					<td class="py-2.5 px-3 text-center text-zinc-700">${formatPct(totals.Other)}</td>
                     ${showNoMaj ? `<td class="py-2.5 px-3 text-center text-orange-800">${formatPct(totals['No Majority'])}</td>` : ''}
-                    <td class="py-2.5 px-3 text-center text-zinc-700">${formatPct(totals.Other)}</td>
                     <td colspan="2" class="py-2.5 px-4 text-[11px] font-normal text-slate-400">Share of filtered LPAs</td>
                 </tr>
             `;
@@ -679,6 +713,16 @@
 			} else {
 				console.warn("Could not determine Last-Modified date. Keeping static HTML fallback.");
 			}
+		}
+
+		
+		document.addEventListener('DOMContentLoaded', () => {
+		// Always show the modal on page load
+		  document.getElementById('welcome-modal').classList.remove('hidden');
+		});
+
+		function closeModal() {
+		  document.getElementById('welcome-modal').classList.add('hidden');
 		}
     </script>
 </body>

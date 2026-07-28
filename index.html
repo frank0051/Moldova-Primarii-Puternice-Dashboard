@@ -65,6 +65,38 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col">
 
+<!-- Welcome Announcement Modal -->
+<div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 mx-4 relative transform transition-all">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center pb-3 border-b border-gray-200">
+      <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+        <span>📢</span> Announcement & Disclaimer
+      </h3>
+      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none">&times;</button>
+    </div>
+
+    <!-- Announcement Content -->
+    <div class="py-4 text-xs text-gray-600 space-y-3 max-h-80 overflow-y-auto">
+      <p class="font-medium text-gray-700">Welcome to the PRIMĂRII PUTERNICE dashboard!</p>
+      <p>Please note the following important announcements and disclaimers before proceeding:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>On 28 July 2026, Parliament set an official, legal deadline for this round of voluntary amalgmation to ensure all changes are made with ample time before elections. The legal deadline for LPAs to submit is now 31 August 2026.</li>
+        <li>This document utilizes the local decisions register and press releases to monitor progress bottom-up; as such, this dashboard lags official "aggregate" number announcements.</li>
+      </ul>
+    </div>
+
+    <!-- Footer / Actions -->
+    <div class="pt-3 border-t border-gray-200 flex justify-end">
+      <button onclick="closeModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+        I Understand
+      </button>
+    </div>
+
+  </div>
+</div>
+
     <!-- TOP HEADER BAR -->
 <!-- HEADER NAVIGATION BAR -->
     <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50">
@@ -1182,6 +1214,15 @@
 
 		// Initialize on page load
 		document.addEventListener('DOMContentLoaded', loadPipelineTrackerData);
+		
+		document.addEventListener('DOMContentLoaded', () => {
+		// Always show the modal on page load
+		  document.getElementById('welcome-modal').classList.remove('hidden');
+		});
+
+		function closeModal() {
+		  document.getElementById('welcome-modal').classList.add('hidden');
+		}
 				
         </script>
 
