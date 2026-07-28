@@ -107,3 +107,19 @@
 2026-35,Briceni-04,1413,46230,Berliniţi,Briceni,PSRM,PSRM,46.6,1136,25.076,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-04.txt
 2026-36,Hîncești-03,5319,46230,Caracui,Hîncești,PSDE,PSDE,21,1342,52.949,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-03.txt
 2026-36,Hîncești-03,5359,46230,Sărata-Galbenă,Hîncești,PSDE,PSDE,21,3752,99.466,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-03.txt
+2026-37,Leova-01,9999,46231,Leova,Leova,LOC,LOC,35.2,8344,103.464,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Leova-01.txt
+2026-37,Leova-01,5728,46231,Hănăsenii Noi,Leova,PAS,PAS,35.2,614,19.957,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Leova-01.txt
+2026-38,Cahul-02,9424,46231,Văleni,Cahul,PAS,PAS,13.5,1956,49.366,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-02.txt
+2026-38,Cahul-02,9411,46231,Brînza,Cahul,Ind.,PAS,13.5,1398,31.648,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-02.txt
+2026-39,Dondușeni-04,3418,46231,Elizavetovca,Dondușeni,CC,CC;PSRM,18.3,339,14.99,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Donduseni-04.txt
+2026-39,Dondușeni-04,3410,46231,Arionești,Dondușeni,PSRM,PSRM,18.3,1033,38.923,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Donduseni-04.txt
+2026-39,Dondușeni-04,3434,46231,Pocrovca,Dondușeni,PSRM,PSRM,18.3,940,8.669,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Donduseni-04.txt
+2026-39,Dondușeni-04,3425,46231,Horodiște,Dondușeni,PSRM,PSRM,18.3,584,32.81,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Donduseni-04.txt
+2026-39,Dondușeni-04,3438,46231,Sudarca,Dondușeni,PSRM,PSRM,18.3,1272,33.67,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Donduseni-04.txt
+2026-40,Fălești-01,4339,46231,Işcălău,Fălești,Ind.,PN/PPS,15.2,1526,35.146,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Falesti-01.txt
+2026-40,Fălești-01,4341,46231,Catranîc,Fălești,PN,PSDE/PN,15.2,783,19.611,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Falesti-01.txt
+2026-40,Fălești-01,4314,46231,Bocani,Fălești,PSRM,PSDE/PSRM/PAS,15.2,783,23.854,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Falesti-01.txt
+2026-40,Fălești-01,4356,46231,Pietrosu,Fălești,PAS,PAS,15.2,473,21.786,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Falesti-01.txt
+2026-41,Cantemir-01,2139,46231,Lingura,Cantemir,PAS,PAS,16.4,913,14.601,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/cantemir-01.txt
+2026-41,Cantemir-01,2156,46231,Tartaul,Cantemir,PAS,PPDA/PAS,16.4,1249,25.921,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/cantemir-01.txt
+2026-41,Cantemir-01,2119,46231,Ciobalaccia,Cantemir,PAS,PAS,16.4,1791,47.649,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/cantemir-01.txt
