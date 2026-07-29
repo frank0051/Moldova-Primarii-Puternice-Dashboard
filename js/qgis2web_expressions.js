@@ -770,14 +770,14 @@ function exp_uat3_post2025mergers_1rule0_eval_expression(context) {
 
 
 function exp_uat3_post2025mergers_1rule2_eval_expression(context) {
-    // cuatm  IN (9998, 9999)
+    // cuatm  IN (9998)
 
     var feature = context.feature;
     
     if (feature.properties) {
-        return "9998, 9999".indexOf(feature.properties['cuatm'] ) > -1 ;
+        return "9998".indexOf(feature.properties['cuatm'] ) > -1 ;
     } else {
-        return "9998, 9999".indexOf(feature['cuatm'] ) > -1 ;
+        return "9998".indexOf(feature['cuatm'] ) > -1 ;
     }
 }
 
