@@ -80,6 +80,7 @@
     <!-- Announcement Content -->
     <div class="py-4 text-xs text-gray-600 space-y-3 max-h-80 overflow-y-auto">
       <p class="font-medium text-gray-700">Welcome to the PRIMĂRII PUTERNICE dashboard!</p>
+	  <h1 class="font-bold text-lg">29 July 2026: Government Announces 300 LPAs made passed decisions to join PRIMĂRII PUTERNICE!</h1>
       <p>Please note the following important announcements and disclaimers before proceeding:</p>
       <ul class="list-disc pl-4 space-y-1">
         <li>On 28 July 2026, Parliament set an official, legal deadline for this round of voluntary amalgmation to ensure all changes are made with ample time before elections. The legal deadline for LPAs to submit is now 31 August 2026.</li>
@@ -110,16 +111,20 @@
             </div>
             
             <!-- Navigation Tabs -->
-            <nav class="flex items-center space-x-2">
-                <a href="index.html" class="px-3 py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-map"></i>
-                    <span>Map & Finances</span>
-                </a>
-			<a href="clusterpolitics.html" class="px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 hover:border-slate-500 transition-colors flex items-center gap-1.5">
-				<i class="fa-solid fa-table-cells"></i>
-				<span>Political Matrix</span>
-			</a>
-            </nav>
+			  <nav class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+				<a href="index.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm flex items-center gap-1.5" title="Map & Finances">
+				  <i class="fa-solid fa-map"></i>
+				  <span class="hidden md:inline">Map & Finances</span>
+				</a>
+				<a href="clusterpolitics.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Political Matrix">
+				  <i class="fa-solid fa-table-cells"></i>
+				  <span class="hidden md:inline">Political Matrix</span>
+				</a>
+				<a href="decision-tracker.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Decision Pipeline">
+				  <i class="fa-solid fa-diagram-project"></i>
+				  <span class="hidden md:inline">Decision Pipeline</span>
+				</a>
+			  </nav>
         </div>
     </header>
 
@@ -262,8 +267,8 @@
 					</div>
 					<span id="stage-5-count" class="ml-1.5 font-bold text-emerald-950 text-xs px-1.5 py-0.5 bg-emerald-100 rounded border border-emerald-300">0</span>
 				</div>
-
 			</div>
+			<em>See the full <a href="decision-tracker.html" style="text-decoration: underline;">Decision Pipeline here.</a></em>
 		</section>
 
 

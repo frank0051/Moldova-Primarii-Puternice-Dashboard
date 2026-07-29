@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="description" content="Interactive dashboard tracking voluntary administrative amalgamation clusters, population impact, financial stimuli, and municipal mergers under Moldova's Primării Puternice reform.">
+  <meta name="keywords" content="Moldova, Primarii Puternice, Voluntary Amalgamation, Administrative Reform, LPAs, Raion, Amalgamare Voluntară, Local Public Administration">
+  <meta name="author" content="Government Reform Tracker">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://frank0051.github.io/Moldova-Primarii-Puternice-Dashboard/decision-tracker.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+  <title>Primării Puternice Pipeline Tracker</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Custom Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .table-row-selected {
+      background-color: #eff6ff !important;
+      border-left: 4px solid #3b82f6;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+
+  <!-- HEADER NAVIGATION BAR -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 flex-shrink-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+        <span class="text-xl sm:text-2xl flex-shrink-0">🇲🇩</span>
+        <div class="truncate">
+          <h1 class="font-bold text-sm sm:text-lg leading-tight tracking-tight truncate">MOLDOVA: PRIMĂRII PUTERNICE</h1>
+          <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Tracking Local Public Administration Reform</p>
+        </div>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+        <a href="index.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Map & Finances">
+          <i class="fa-solid fa-map"></i>
+          <span class="hidden md:inline">Map & Finances</span>
+        </a>
+        <a href="clusterpolitics.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Political Matrix">
+          <i class="fa-solid fa-table-cells"></i>
+          <span class="hidden md:inline">Political Matrix</span>
+        </a>
+        <a href="decision-tracker.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm flex items-center gap-1.5" title="Decision Pipeline">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span class="hidden md:inline">Decision Pipeline</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Control Toolbar (Responsive Dropdowns) -->
+  <div class="bg-white border-b border-gray-200 px-3 sm:px-6 py-2 flex-shrink-0 z-20 shadow-sm">
+    <!-- Desktop Controls -->
+    <div class="hidden lg:flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="relative w-56">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input type="text" id="search-input-desktop" placeholder="Search LPA, Raion..." class="w-full pl-8 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <select id="raion-filter-desktop" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"><option value="ALL">All Raions</option></select>
+        <select id="status-filter-desktop" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="ALL">All Statuses</option>
+          <option value="5. Adopted">5. Adopted</option>
+          <option value="4. Final Meeting Scheduled">4. Final Meeting Scheduled</option>
+          <option value="3. Draft Consultation">3. Draft Consultation</option>
+          <option value="2. Working Group">2. Working Group</option>
+          <option value="1. Initiated">1. Initiated</option>
+          <option value="0. Unclear or Not Initiated">0. Unclear or Not Initiated</option>
+        </select>
+        <select id="scope-filter-desktop" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="IN_SCOPE">In-Scope</option>
+          <option value="LT_3000">In-Scope & &lt;3000 Pop.</option>
+          <option value="LT_1500">In-Scope & &lt;1500 Pop.</option>
+          <option value="ALL">All (No Filter)</option>
+        </select>
+      </div>
+      
+      <!-- Desktop Status Summary Pills -->
+      <div id="status-summary-desktop" class="flex items-center gap-1.5 text-xs"></div>
+    </div>
+
+    <!-- Mobile Controls Accordion -->
+    <details class="lg:hidden text-xs group">
+      <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-700 py-1 select-none">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-sliders text-blue-600"></i> Search & Filters</span>
+        <span class="text-[11px] text-blue-600 group-open:hidden">Expand ▾</span>
+        <span class="text-[11px] text-blue-600 hidden group-open:inline">Collapse ▴</span>
+      </summary>
+      <div class="pt-2 pb-1 space-y-2 border-t border-gray-100 mt-2">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input type="text" id="search-input-mobile" placeholder="Search LPA, Raion, or Cluster..." class="w-full pl-8 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <select id="raion-filter-mobile" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-white"><option value="ALL">All Raions</option></select>
+          <select id="status-filter-mobile" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-white">
+            <option value="ALL">All Statuses</option>
+            <option value="5. Adopted">5. Adopted</option>
+            <option value="4. Final Meeting Scheduled">4. Meeting Sched.</option>
+            <option value="3. Draft Consultation">3. Draft Consult.</option>
+            <option value="2. Working Group">2. Working Group</option>
+            <option value="1. Initiated">1. Initiated</option>
+            <option value="0. Unclear or Not Initiated">0. Unclear</option>
+          </select>
+        </div>
+        <select id="scope-filter-mobile" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-white">
+          <option value="IN_SCOPE">In-Scope</option>
+          <option value="LT_3000">In-Scope & &lt;3000 Pop.</option>
+          <option value="LT_1500">In-Scope & &lt;1500 Pop.</option>
+          <option value="ALL">All (No Filter)</option>
+        </select>
+      </div>
+    </details>
+
+    <!-- Horizontal Scrollable Pills for Mobile -->
+    <div id="status-summary-mobile" class="lg:hidden flex items-center gap-1.5 text-[11px] overflow-x-auto no-scrollbar pt-1.5 pb-0.5"></div>
+  </div>
+
+  <!-- Mobile View Switcher Tabs -->
+  <div class="lg:hidden flex border-b border-gray-200 bg-slate-200 text-xs font-semibold text-slate-700 flex-shrink-0">
+    <button id="tab-btn-map" onclick="switchMobileTab('map')" class="flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors">
+      <i class="fa-solid fa-map-location-dot mr-1"></i> Map View
+    </button>
+    <button id="tab-btn-table" onclick="switchMobileTab('table')" class="flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors">
+      <i class="fa-solid fa-table mr-1"></i> Table View (<span id="mobile-record-count">0</span>)
+    </button>
+  </div>
+
+  <!-- Main Content Split -->
+  <div class="flex-grow flex flex-col lg:flex-row overflow-hidden relative">
+    
+    <!-- LEFT PANEL: MAP -->
+    <div id="panel-map" class="w-full lg:w-1/2 h-full flex flex-col border-r border-gray-300 bg-white relative">
+      <div id="map" class="w-full h-full min-h-0"></div>
+      
+      <!-- Overlay Legend Floating on Bottom Right of Map -->
+      <details class="absolute bottom-2 right-2 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-300 rounded-lg shadow-md max-w-[220px] text-xs group" open>
+        <summary class="px-2.5 py-1.5 font-semibold text-slate-800 text-[11px] flex items-center justify-between cursor-pointer select-none">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-blue-600"></i> Legend</span>
+          <span class="text-[9px] text-gray-500 group-open:hidden">▾</span>
+          <span class="text-[9px] text-gray-500 hidden group-open:inline">▴</span>
+        </summary>
+        <div class="p-2 pt-0 grid grid-cols-1 gap-1 text-[10px]" id="legend-items"></div>
+      </details>
+    </div>
+
+    <!-- RIGHT PANEL: TABLE -->
+    <div id="panel-table" class="hidden lg:flex w-full lg:w-1/2 h-full bg-white flex-col overflow-hidden">
+      <div class="px-4 py-2 bg-slate-50 border-b border-gray-200 flex justify-between items-center text-xs text-gray-500 font-medium flex-shrink-0">
+        <span>Showing <strong id="record-count" class="text-gray-900">0</strong> LPAs</span>
+        <span class="hidden sm:inline">Click row to locate on map</span>
+      </div>
+
+      <div class="flex-grow overflow-auto custom-scrollbar">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead class="bg-slate-100 text-slate-700 sticky top-0 z-10 font-semibold shadow-sm">
+            <tr>
+              <th class="p-2 sm:p-3 border-b border-gray-200">LPA Name</th>
+              <th class="p-2 sm:p-3 border-b border-gray-200">Raion</th>
+              <th class="p-2 sm:p-3 border-b border-gray-200">Cluster</th>
+              <th class="p-2 sm:p-3 border-b border-gray-200">Pop</th>
+              <th class="p-2 sm:p-3 border-b border-gray-200">Status</th>
+              <th class="p-2 sm:p-3 border-b border-gray-200 text-center">Source</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-gray-100 text-gray-700">
+            <tr><td colspan="6" class="p-8 text-center text-gray-400">Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- PERSISTENT FOOTER -->
+  <footer class="bg-slate-900 text-gray-400 text-[11px] px-4 py-2 flex-shrink-0 border-t border-slate-800">
+    <div class="space-y-1 text-left">
+      <p>Data based on public press releases. For official information visit <a href="https://primariiputernice.gov.md/" class="text-sky-400 hover:underline">https://primariiputernice.gov.md/</a></p>
+      <p>Frank Bracco, 2026. MIT License. Also uses Leaflet, PapaParse, and tailwindcss under permissive open source licensing. <a style="text-decoration: underline;" href="https://github.com/frank0051/Moldova-Primarii-Puternice-Dashboard/issues">Report issues on Github.</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const CSV_URL = 'https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/decision_tracker.csv';
+    const GEOJSON_URL = 'https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/uat3_post2025mergers_1.js';
+
+    const MOLDOVA_BOUNDS = [
+      [45.45, 26.60],
+      [48.50, 30.16]
+    ];
+
+    const STATUS_ORDER = [
+      '0. Unclear or Not Initiated',
+      '1. Initiated',
+      '2. Working Group',
+      '3. Draft Consultation',
+      '4. Final Meeting Scheduled',
+      '5. Adopted'
+    ];
+
+    const STATUS_CONFIG = {
+      '0. Unclear or Not Initiated': { color: '#64748b', label: '0. Unclear', badgeClass: 'bg-slate-100 text-slate-700 border-slate-300' },
+      '1. Initiated': { color: '#38bdf8', label: '1. Initiated', badgeClass: 'bg-sky-100 text-sky-800 border-sky-300' },
+      '2. Working Group': { color: '#d97706', label: '2. Working Group', badgeClass: 'bg-amber-100 text-amber-800 border-amber-300' },
+      '3. Draft Consultation': { color: '#4f46e5', label: '3. Draft Consult.', badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-300' },
+      '4. Final Meeting Scheduled': { color: '#9333ea', label: '4. Mtg Sched.', badgeClass: 'bg-purple-100 text-purple-800 border-purple-300' },
+      '5. Adopted': { color: '#10b981', label: '5. Adopted', badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-300' }
+    };
+
+    let rawCsvData = [];
+    let csvLookup = {};
+    let geoJsonLayer = null;
+    let map = null;
+    const layerByCutam = {};
+    let activeCutam = null;
+
+    function getClusterName(row) {
+      if (!row) return 'Awaiting Full Adoption';
+      const val = row['In Cluster'] !== undefined ? row['In Cluster'] : row.In_Cluster;
+      if (val === undefined || val === null) return 'Awaiting Full Adoption';
+      const strVal = String(val).trim();
+      if (!strVal || strVal.toUpperCase() === 'FALSE') return 'Awaiting Full Adoption';
+      return strVal;
+    }
+
+    function initMap() {
+      map = L.map('map', { zoomControl: false });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      L.control.zoom({ position: 'topleft' }).addTo(map);
+      map.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+      buildLegend();
+    }
+
+    function buildLegend() {
+      const container = document.getElementById('legend-items');
+      container.innerHTML = Object.entries(STATUS_CONFIG).map(([statusKey, cfg]) => `
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-sm border inline-block flex-shrink-0" style="background-color: ${cfg.color}; border-color: rgba(0,0,0,0.15);"></span>
+          <span class="text-slate-700 font-medium truncate">${cfg.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function populateRaionFilter() {
+      const uniqueRaions = [...new Set(rawCsvData.map(r => r.Raion_Name).filter(Boolean))].sort();
+      const optionsHtml = '<option value="ALL">All Raions</option>' + uniqueRaions.map(r => `<option value="${r}">${r}</option>`).join('');
+      document.getElementById('raion-filter-desktop').innerHTML = optionsHtml;
+      document.getElementById('raion-filter-mobile').innerHTML = optionsHtml;
+    }
+
+    async function loadData() {
+      try {
+        const csvResponse = await fetch(CSV_URL);
+        const csvText = await csvResponse.text();
+        const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+        rawCsvData = parsed.data;
+
+        rawCsvData.forEach(row => {
+          if (row.Cuatm) {
+            csvLookup[String(row.Cuatm).trim()] = row;
+          }
+        });
+
+        populateRaionFilter();
+        renderSummaryPills();
+
+        const jsResponse = await fetch(GEOJSON_URL);
+        const jsText = await jsResponse.text();
+        const jsonStart = jsText.indexOf('{');
+        const jsonEnd = jsText.lastIndexOf('}');
+        const geoJsonData = JSON.parse(jsText.substring(jsonStart, jsonEnd + 1));
+
+        renderGeoJsonLayer(geoJsonData);
+        renderTable(rawCsvData);
+
+        bindFilterEvents();
+        applyFilters();
+
+      } catch (err) {
+        console.error("Data loading failed:", err);
+      }
+    }
+
+    function bindFilterEvents() {
+      const syncAndFilter = (e) => {
+        const id = e.target.id;
+        if (id.includes('desktop')) {
+          const mobileEl = document.getElementById(id.replace('desktop', 'mobile'));
+          if (mobileEl) mobileEl.value = e.target.value;
+        } else if (id.includes('mobile')) {
+          const desktopEl = document.getElementById(id.replace('mobile', 'desktop'));
+          if (desktopEl) desktopEl.value = e.target.value;
+        }
+        applyFilters();
+      };
+
+      ['search-input-desktop', 'raion-filter-desktop', 'status-filter-desktop', 'scope-filter-desktop',
+       'search-input-mobile', 'raion-filter-mobile', 'status-filter-mobile', 'scope-filter-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', syncAndFilter);
+        }
+      });
+    }
+
+    // Function to handle clicking a status pill to toggle filter
+    function filterByStatus(statusKey) {
+      const desktopSelect = document.getElementById('status-filter-desktop');
+      const mobileSelect = document.getElementById('status-filter-mobile');
+      
+      const currentVal = desktopSelect ? desktopSelect.value : 'ALL';
+      const newVal = (currentVal === statusKey) ? 'ALL' : statusKey;
+
+      if (desktopSelect) desktopSelect.value = newVal;
+      if (mobileSelect) mobileSelect.value = newVal;
+
+      applyFilters();
+    }
+
+    function renderSummaryPills(dataToSummarize) {
+      const counts = {};
+      STATUS_ORDER.forEach(s => counts[s] = 0);
+      const data = dataToSummarize || rawCsvData;
+
+      data.forEach(r => {
+        const st = r.Final_Status || '0. Unclear or Not Initiated';
+        if (counts[st] !== undefined) counts[st]++;
+        else counts['0. Unclear or Not Initiated']++;
+      });
+
+      const currentStatus = document.getElementById('status-filter-desktop') ? document.getElementById('status-filter-desktop').value : 'ALL';
+
+      const html = STATUS_ORDER.map(st => {
+        const cfg = STATUS_CONFIG[st];
+        const isActive = currentStatus === st;
+        const activeStyles = isActive ? 'ring-2 ring-blue-600 shadow-sm font-bold scale-105' : 'opacity-85 hover:opacity-100';
+
+        return `
+          <button type="button" onclick="filterByStatus('${st}')" class="px-2 py-0.5 rounded-full border text-[10px] font-medium whitespace-nowrap cursor-pointer transition transform ${cfg.badgeClass} ${activeStyles}" title="Click to filter by ${cfg.label}">
+            ${cfg.label}: <strong>${counts[st]}</strong>
+          </button>
+        `;
+      }).join('');
+
+      const desktopSummary = document.getElementById('status-summary-desktop');
+      const mobileSummary = document.getElementById('status-summary-mobile');
+      if (desktopSummary) desktopSummary.innerHTML = html;
+      if (mobileSummary) mobileSummary.innerHTML = html;
+    }
+
+    function renderGeoJsonLayer(geoJsonData) {
+      if (geoJsonLayer) map.removeLayer(geoJsonLayer);
+      Object.keys(layerByCutam).forEach(key => delete layerByCutam[key]);
+
+      geoJsonLayer = L.geoJSON(geoJsonData, {
+        style: feature => {
+          const cutam = getFeatureCutam(feature);
+          const trackerRow = csvLookup[cutam];
+          const status = trackerRow ? trackerRow.Final_Status : '0. Unclear or Not Initiated';
+          const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+
+          return {
+            fillColor: cfg.color,
+            weight: 0.8,
+            opacity: 1,
+            color: '#ffffff',
+            fillOpacity: 0.75
+          };
+        },
+        onEachFeature(feature, layer) {
+          const cutam = getFeatureCutam(feature);
+          if (cutam) layerByCutam[cutam] = layer;
+
+          const trackerRow = csvLookup[cutam];
+          const props = feature.properties || {};
+
+          const lpaName = trackerRow ? trackerRow.LPA_Name : (props.gfullname || props.name || 'Unknown LPA');
+          const raionName = trackerRow ? trackerRow.Raion_Name : '';
+          const status = trackerRow ? trackerRow.Final_Status : '0. Unclear or Not Initiated';
+          const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+
+          const rawPop = trackerRow ? (trackerRow.Pop_2024 || trackerRow['Population (2024 Census)']) : props.population;
+          const popFormatted = (rawPop !== undefined && rawPop !== null && rawPop !== '') ? parseFloat(String(rawPop).replace(/,/g, '')).toLocaleString() : 'N/A';
+          const clusterName = trackerRow ? getClusterName(trackerRow) : (props.cluster_name || props.cluster || 'Awaiting Full Adoption');
+
+          const popupContent = `
+            <div style="font-family: sans-serif; min-width: 140px;">
+              <h4 style="margin: 0 0 4px 0; font-size: 12px; font-weight: bold; color: #1e293b;">${lpaName} ${raionName ? `<span style="font-weight: normal; color: #64748b;">(${raionName})</span>` : ''}</h4>
+              <div style="font-size: 11px; color: #334155;">
+                <p style="margin: 2px 0;"><strong>Status:</strong> <span style="color: ${cfg.color}; font-weight: 600;">${status}</span></p>
+                <p style="margin: 2px 0;"><strong>Pop:</strong> ${popFormatted}</p>
+                <p style="margin: 2px 0;"><strong>Cluster:</strong> ${clusterName}</p>
+              </div>
+            </div>
+          `;
+
+          layer.bindPopup(popupContent);
+          layer.on('click', () => { if (cutam) selectLPA(cutam, false); });
+        }
+      }).addTo(map);
+
+      if (geoJsonLayer.getBounds().isValid()) {
+        map.fitBounds(geoJsonLayer.getBounds(), { padding: [15, 15] });
+      }
+    }
+
+    function getFeatureCutam(feature) {
+      const p = feature.properties || {};
+      const key = Object.keys(p).find(k => k.toLowerCase() === 'cutam' || k.toLowerCase() === 'cuatm' || k.toLowerCase() === 'natcode');
+      return p[key] ? String(p[key]).trim() : null;
+    }
+
+    function renderTable(dataRows) {
+      const tbody = document.getElementById('table-body');
+      document.getElementById('record-count').textContent = dataRows.length;
+      document.getElementById('mobile-record-count').textContent = dataRows.length;
+
+      if (dataRows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400">No matching LPAs found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = dataRows.map(row => {
+        const cutam = String(row.Cuatm).trim();
+        const status = row.Final_Status || '0. Unclear or Not Initiated';
+        const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+        const isSelected = activeCutam === cutam;
+        const clusterName = getClusterName(row);
+        const sourceUrl = row.Final_Source && row.Final_Source.startsWith('http') ? row.Final_Source : null;
+
+        return `
+          <tr id="row-${cutam}" onclick="selectLPA('${cutam}', true)" class="hover:bg-slate-50 cursor-pointer transition ${isSelected ? 'table-row-selected' : ''}">
+            <td class="p-2 sm:p-3 font-semibold text-gray-900">${row.LPA_Name}</td>
+            <td class="p-2 sm:p-3 text-gray-600">${row.Raion_Name}</td>
+            <td class="p-2 sm:p-3 text-gray-600">${clusterName}</td>
+            <td class="p-2 sm:p-3 text-gray-600">${row.Pop_2024 || row['Population (2024 Census)'] || 'N/A'}</td>
+            <td class="p-2 sm:p-3">
+              <span class="px-1.5 py-0.5 rounded border text-[10px] font-medium inline-block ${cfg.badgeClass}">
+                ${cfg.label}
+              </span>
+            </td>
+            <td class="p-2 sm:p-3 text-center">
+              ${sourceUrl ? `<a href="${sourceUrl}" target="_blank" onclick="event.stopPropagation()" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '-'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('search-input-desktop').value.toLowerCase().trim();
+      const raionTerm = document.getElementById('raion-filter-desktop').value;
+      const statusTerm = document.getElementById('status-filter-desktop').value;
+      const scopeTerm = document.getElementById('scope-filter-desktop').value;
+
+      const filtered = rawCsvData.filter(row => {
+        const clusterVal = getClusterName(row);
+
+        const matchesSearch = !searchTerm || 
+          (row.LPA_Name && row.LPA_Name.toLowerCase().includes(searchTerm)) || 
+          (row.Raion_Name && row.Raion_Name.toLowerCase().includes(searchTerm)) ||
+          (clusterVal && clusterVal.toLowerCase().includes(searchTerm));
+
+        const matchesRaion = raionTerm === 'ALL' || row.Raion_Name === raionTerm;
+        const matchesStatus = statusTerm === 'ALL' || row.Final_Status === statusTerm;
+
+        const rawPop = row.Pop_2024 || row['Population (2024 Census)'] || '';
+        const popNum = parseFloat(String(rawPop).replace(/,/g, '').trim());
+
+        let matchesScope = true;
+        if (scopeTerm === 'IN_SCOPE') {
+          matchesScope = String(row['In-Scope']).toUpperCase() === 'TRUE';
+        } else if (scopeTerm === 'LT_3000') {
+          matchesScope = !isNaN(popNum) && popNum < 3000 && String(row['In-Scope']).toUpperCase() === 'TRUE';
+        } else if (scopeTerm === 'LT_1500') {
+          matchesScope = !isNaN(popNum) && popNum < 1500 && String(row['In-Scope']).toUpperCase() === 'TRUE';
+        }
+
+        return matchesSearch && matchesRaion && matchesStatus && matchesScope;
+      });
+
+      renderSummaryPills(filtered);
+      renderTable(filtered);
+
+      const validCutams = new Set(filtered.map(r => String(r.Cuatm).trim()));
+      const visibleLayerGroup = L.featureGroup();
+      
+      if (geoJsonLayer) {
+        geoJsonLayer.eachLayer(layer => {
+          const cutam = getFeatureCutam(layer.feature);
+          if (validCutams.has(cutam)) {
+            layer.setStyle({ opacity: 1, fillOpacity: 0.75 });
+            visibleLayerGroup.addLayer(layer);
+          } else {
+            layer.setStyle({ opacity: 0.1, fillOpacity: 0.05 });
+          }
+        });
+
+        if (raionTerm !== 'ALL' && visibleLayerGroup.getLayers().length > 0) {
+          map.fitBounds(visibleLayerGroup.getBounds(), { padding: [30, 30], maxZoom: 12 });
+        } else if (raionTerm === 'ALL' && !searchTerm && statusTerm === 'ALL' && scopeTerm === 'ALL') {
+          map.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+        }
+      }
+    }
+
+    function selectLPA(cutam, zoomMap) {
+      if (!cutam) return;
+
+      if (activeCutam) {
+        const prevRow = document.getElementById(`row-${activeCutam}`);
+        if (prevRow) prevRow.classList.remove('table-row-selected');
+        const prevLayer = layerByCutam[activeCutam];
+        if (prevLayer) prevLayer.setStyle({ weight: 0.8, color: '#ffffff' });
+      }
+
+      activeCutam = cutam;
+
+      const newRow = document.getElementById(`row-${cutam}`);
+      if (newRow) {
+        newRow.classList.add('table-row-selected');
+        newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const layer = layerByCutam[cutam];
+      if (layer) {
+        layer.setStyle({ weight: 3, color: '#1e40af' });
+        layer.bringToFront();
+        if (zoomMap) {
+          if (window.innerWidth < 1024) switchMobileTab('map');
+          if (layer.getBounds) map.fitBounds(layer.getBounds(), { maxZoom: 12, padding: [30, 30] });
+        }
+      }
+    }
+
+    function switchMobileTab(tab) {
+      const panelMap = document.getElementById('panel-map');
+      const panelTable = document.getElementById('panel-table');
+      const btnMap = document.getElementById('tab-btn-map');
+      const btnTable = document.getElementById('tab-btn-table');
+
+      if (tab === 'map') {
+        panelMap.classList.remove('hidden');
+        panelTable.classList.add('hidden');
+        panelTable.classList.remove('flex');
+        
+        btnMap.className = "flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors";
+        btnTable.className = "flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors";
+        
+        setTimeout(() => map.invalidateSize(), 150);
+      } else {
+        panelMap.classList.add('hidden');
+        panelTable.classList.remove('hidden');
+        panelTable.classList.add('flex');
+        
+        btnTable.className = "flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors";
+        btnMap.className = "flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      loadData();
+    });
+  </script>
+</body>
+</html>
