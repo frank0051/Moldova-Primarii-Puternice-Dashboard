@@ -38,8 +38,10 @@
     <!-- Announcement Content -->
     <div class="py-4 text-xs text-gray-600 space-y-3 max-h-80 overflow-y-auto">
       <p class="font-medium text-gray-700">Welcome to the PRIMĂRII PUTERNICE dashboard!</p>
+	  <h1 class="font-bold text-lg">2:30PM, 31 July 2026: Gov't announced over 400 LPAs have joined PRIMĂRII PUTERNICE, including a Chisinau muniicpality LPA - as such I have included level 1 Chisinau LPAS in the decision pipeline.</h1>
       <p>Please note the following important announcements and disclaimers before proceeding:</p>
       <ul class="list-disc pl-4 space-y-1">
+		<li>Chisinau Level 1 LPAs are begun to adopt amalgamation decisions, as such the decision pipeline filter has been updated to include level 1 Chisinau LPAs (excluding Mun. Chisinau itself).</li>
         <li>On 28 July 2026, Parliament set an official, legal deadline for this round of voluntary amalgmation to ensure all changes are made with ample time before elections. The legal deadline for LPAs to submit is now 31 August 2026.</li>
         <li>This document utilizes the local decisions register and press releases to monitor progress bottom-up; as such, this dashboard lags official "aggregate" number announcements.</li>
       </ul>
@@ -361,7 +363,7 @@
                         name: row.Cluster_Name,
                         raion: row.Raion,
                         lpas: [],
-                        parties: { PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0,  Other: 0, 'No Majority': 0 }
+                        parties: { PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PN: 0, PLDM: 0,  Other: 0, 'No Majority': 0 }
                     };
                 }
                 clusterMap[cid].lpas.push(row);
@@ -374,7 +376,7 @@
                     clusterMap[cid].parties['No Majority']++;
                 } else {
                     const targetParty = rawParty || 'Ind.';
-                    if (['PAS', 'PSRM', 'PSDE', 'Ind.', 'PDCM', 'PDMM', 'PLDM'].includes(targetParty)) {
+                    if (['PAS', 'PSRM', 'PSDE', 'Ind.', 'PDCM', 'PN', 'PLDM'].includes(targetParty)) {
                         clusterMap[cid].parties[targetParty]++;
                     } else {
                         clusterMap[cid].parties.Other++;
@@ -421,7 +423,7 @@
 					${sortHeader('PSDE', 'PSDE', 'bg-blue-50/80 text-blue-900 border-r border-blue-200/60')}
 					${sortHeader('Ind.', 'Ind.', 'bg-slate-200/50 text-slate-800 border-r border-slate-300/60')}
 					${sortHeader('PDCM', 'PDCM', 'bg-purple-50/80 text-purple-900 border-r border-purple-200/60')}
-					${sortHeader('PDMM', 'PDMM', 'bg-teal-50/80 text-teal-900 border-r border-teal-200/60')}
+					${sortHeader('PN', 'PN', 'bg-teal-50/80 text-teal-900 border-r border-teal-200/60')}
 					${sortHeader('PLDM', 'PLDM', 'bg-green-50/80 text-green-900 border-r border-green-200/60')}
 					${sortHeader('Other', 'Other', 'bg-zinc-100 text-zinc-800 border-r border-zinc-200')}
 					${showNoMaj ? sortHeader('No Majority', 'No Majority', 'bg-orange-50/80 text-orange-900 border-r border-orange-200/60') : ''}
@@ -494,7 +496,7 @@
 			});
 
             tbody.innerHTML = '';
-            const totals = { lpas: 0, PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PDMM: 0, PLDM: 0, Other: 0 , 'No Majority': 0};
+            const totals = { lpas: 0, PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PN: 0, PLDM: 0, Other: 0 , 'No Majority': 0};
             const showNoMaj = (currentMatrixMode === 'council');
             const totalCols = showNoMaj ? 13 : 12;
 
@@ -528,7 +530,7 @@
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PSDE, 'bg-blue-100 text-blue-800 border-blue-300')}</td>
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties['Ind.'], 'bg-slate-200 text-slate-800 border-slate-300')}</td>
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PDCM, 'bg-purple-100 text-purple-800 border-purple-300')}</td>
-                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PDMM, 'bg-teal-100 text-teal-800 border-teal-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PN, 'bg-teal-100 text-teal-800 border-teal-300')}</td>
                         <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PLDM, 'bg-green-100 text-green-800 border-green-300')}</td>
 						<td class="py-3 px-3 text-center">${renderCellBadge(c.parties.Other, 'bg-zinc-200 text-zinc-800 border-zinc-300')}</td>
                         ${showNoMaj ? `<td class="py-3 px-3 text-center">${renderCellBadge(c.parties['No Majority'], 'bg-orange-100 text-orange-800 border-orange-300')}</td>` : ''}
@@ -581,7 +583,7 @@
                     <td class="py-3 px-3 text-center font-bold text-blue-900">${totals.PSDE}</td>
                     <td class="py-3 px-3 text-center font-bold text-slate-800">${totals['Ind.']}</td>
                     <td class="py-3 px-3 text-center font-bold text-purple-900">${totals.PDCM}</td>
-                    <td class="py-3 px-3 text-center font-bold text-teal-900">${totals.PDMM}</td>
+                    <td class="py-3 px-3 text-center font-bold text-teal-900">${totals.PN}</td>
                     <td class="py-3 px-3 text-center font-bold text-green-900">${totals.PLDM}</td>
 					<td class="py-3 px-3 text-center font-bold text-zinc-800">${totals.Other}</td>
                     ${showNoMaj ? `<td class="py-3 px-3 text-center font-bold text-orange-900">${totals['No Majority']}</td>` : ''}
@@ -596,7 +598,7 @@
                     <td class="py-2.5 px-3 text-center text-blue-800">${formatPct(totals.PSDE)}</td>
                     <td class="py-2.5 px-3 text-center text-slate-700">${formatPct(totals['Ind.'])}</td>
                     <td class="py-2.5 px-3 text-center text-purple-800">${formatPct(totals.PDCM)}</td>
-                    <td class="py-2.5 px-3 text-center text-teal-800">${formatPct(totals.PDMM)}</td>
+                    <td class="py-2.5 px-3 text-center text-teal-800">${formatPct(totals.PN)}</td>
                     <td class="py-2.5 px-3 text-center text-green-800">${formatPct(totals.PLDM)}</td>
 					<td class="py-2.5 px-3 text-center text-zinc-700">${formatPct(totals.Other)}</td>
                     ${showNoMaj ? `<td class="py-2.5 px-3 text-center text-orange-800">${formatPct(totals['No Majority'])}</td>` : ''}
