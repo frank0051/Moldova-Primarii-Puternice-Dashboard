@@ -182,7 +182,7 @@
 				<!-- Title -->
 				<div class="flex items-center gap-2">
 					<span class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">Primării Puternice Pipeline</span>
-					<span class="text-slate-400 text-[11px] md:inline">Experimental; includes all LPAs (except Găgăuzia & Mun. Chisinau) - regardless of if cluster is adopted by all members.</span>
+					<span class="text-slate-400 text-[11px] md:inline">Includes all LPAs (except Găgăuzia, level 1 Chisinau, & level 1 Balti) - regardless of if cluster is adopted by all members.</span>
 				</div>
 
 				<!-- Right Side Controls: Population Toggle + Total Counter -->
@@ -1175,14 +1175,17 @@
 		function renderPipelineTracker() {
 			if (!rawPipelineData || rawPipelineData.length === 0) return;
 
-			const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
+			//const excludedRaions = ['mun. Chișinău', 'UTA Găgăuzia', 'mun. Chisinau', 'UTA Gagauzia'];
 			const stageCounts = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 			let totalFilteredLPAs = 0;
 
 			rawPipelineData.forEach(row => {
 				// 1. Exclude Raions (Column 1)
-				const raion = (row['Raion_Name'] || '').trim();
-				if (excludedRaions.includes(raion)) return;
+				//const raion = (row['Raion_Name'] || '').trim();
+				//if (excludedRaions.includes(raion)) return;
+			
+				//1. Filter by in-scope
+				if (row['In-Scope'] === 'FALSE') return;
 
 				// 2. Population Filter (Pop_2024 column)
 				const popRaw = row['Pop_2024'] ? row['Pop_2024'].toString().replace(/,/g, '').trim() : '0';
