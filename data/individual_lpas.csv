@@ -278,9 +278,6 @@
 2026-84,Rîșcani-2026-84,7141,7/31/2026,Pociumbăuți,Rîșcani,PSRM,PSRM/PAS,15,425,14.558,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Riscani-04.txt
 2026-84,Rîșcani-2026-84,7139,7/31/2026,Pociumbeni,Rîșcani,PSDE,PSDE,15,759,26.275,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Riscani-04.txt
 2026-84,Rîșcani-2026-84,7131,7/31/2026,Horodiște,Rîșcani,PSDE,PSDE/PSRM,15,436,16.377,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Riscani-04.txt
-2026-85,Căușeni-2026-85,2722,46237,Tănătari,Căușeni,PNL,PNL/PAS,16.2,1676,37.789,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-04.txt
-2026-85,Căușeni-2026-85,2723,46237,Tănătarii Noi,Căușeni,PAS,PAS,16.2,474,12.744,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-04.txt
-2026-85,Căușeni-2026-85,2730,46237,Ursoaia,Căușeni,PSDE,PSDE,16.2,1777,32.357,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-04.txt
 2026-86,Briceni-2026-86,1433,46237,Larga,Briceni,Ind.,PSRM/PAS,22.3,2977,55.952,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-01.txt
 2026-86,Briceni-2026-86,1423,46237,Coteala,Briceni,PAS,PAS/PSRM,22.3,1338,23.266,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-01.txt
 2026-86,Briceni-2026-86,1437,46237,Medveja,Briceni,Ind.,PSRM,22.3,885,24.514,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-01.txt
@@ -313,9 +310,6 @@
 2026-95,Nisporeni-2026-95,6022,46238,Călimănești,Nisporeni,PAS,PAS,13.2,575,8.768,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-02.txt
 2026-95,Nisporeni-2026-95,6037,46238,Marinici,Nisporeni,PAS,PAS/PSDE,13.2,1333,22.029,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-02.txt
 2026-95,Nisporeni-2026-95,6045,46238,Șișcani,Nisporeni,PLDM,PLDM/PAS,13.2,1291,31.283,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-02.txt
-2026-96,Florești/Telenești-2026-96,8941,46238,Ordășei,Telenești,PAS,PAS,12.4,469,22.617,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Florești-Telenești-01.txt
-2026-96,Florești/Telenești-2026-96,4557,46238,Ștefănești,Florești,Respect,Respect,12.4,1396,35.244,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Florești-Telenești-01.txt
-2026-96,Florești/Telenești-2026-96,4548,46238,Prodănești,Florești,PCRM,PCRM/PSRM/PAS/PN,12.4,1154,30.687,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Florești-Telenești-01.txt
 2026-97,Ungheni-2026-97,9225,46238,Buşila,Ungheni,PAS,PAS/CUB/Respect,14.6,1301,24.782,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Ungheni-03.txt
 2026-97,Ungheni-2026-97,9227,46238,Chirileni,Ungheni,PAS,PAS,14.6,1074,28.66,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Ungheni-03.txt
 2026-97,Ungheni-2026-97,9255,46238,Negurenii Vechi,Ungheni,PAS,PAS,14.6,1158,47.809,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Ungheni-03.txt
@@ -331,6 +325,7 @@
 2026-99,Rezina-2026-99,6732,46238,Păpăuți,Rezina,PPS,PPS/PAS/PPDA,83.4,891,22.252,1,1,https://www.facebook.com/reel/1711257713489601
 2026-99,Rezina-2026-99,6724,46238,Lalova,Rezina,PAS,PAS,83.4,682,39.085,1,1,https://www.facebook.com/reel/1711257713489601
 2026-99,Rezina-2026-99,6721,46238,Horodiște,Rezina,PAS,PAS,83.4,833,30.054,1,1,https://www.facebook.com/reel/1711257713489601
+2026-99,Rezina-2026-99,6733,46238,Lipceni,Rezina,PPS,PPS,83.4,367,10.86,1,1,https://www.facebook.com/reel/1711257713489601
 2026-100,Căușeni/Ialoveni-2026-100,2324,46234,Gangura,Ialoveni,PAS,PAS,14.3,1751,52.548,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
 2026-100,Căușeni/Ialoveni-2026-100,2337,46234,Văratic,Ialoveni,PDCM,PDCM,14.3,860,19.419,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
 2026-100,Căușeni/Ialoveni-2026-100,2330,46234,Pervomaisc,Căușeni,PSRM,PSRM,14.3,848,36.339,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
@@ -363,7 +358,6 @@
 2026-110,Briceni-2026-110,1441,46238,Pererita,Briceni,PSRM,PSRM/PAS/PN,39.5,939,24.33,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-02.txt
 2026-110,Briceni-2026-110,1432,46238,Hlina,Briceni,PSDE,PSDE/PSRM/PAS,39.5,647,20.726,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-02.txt
 2026-110,Briceni-2026-110,1427,46238,Beleavinţi,Briceni,Ind.,PSRM,39.5,1284,26.966,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-02.txt
-2026-110,Briceni-2026-110,1442,46238,Șirăuți,Briceni,PSRM,PSRM,39.5,1217,26.486,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Briceni-02.txt
 2026-111,Căușeni-2026-111,2301,46240,Căinari,Căușeni,Ind.,PAS/PSRM/PLDM,28.4,2135,42.933,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-03.txt
 2026-111,Căușeni-2026-111,2314,46240,Chircăieștii Noi,Căușeni,PLDM,PSDE/PLDM,28.4,939,28.551,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-03.txt
 2026-111,Căușeni-2026-111,2318,46240,Cîrnățenii Noi,Căușeni,PSDE,PSDE/PAS/PLDM,28.4,1022,33.143,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-03.txt
@@ -442,3 +436,10 @@
 2026-125,Strășeni-2026-125,8032,46250,Romăneşti,Strășeni,PSRM,PSRM/PAS/PDCM,14.2,972,8.255,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Straseni-07.txt
 2026-126,Sîngerei-2026-126,7456,46251,Izvoare,Sîngerei,PAS,PAS/Renaștere/PN,15.3,514,23.662,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Singerei-07.txt
 2026-126,Sîngerei-2026-126,7468,46251,Rădoaia,Sîngerei,PAS,PAS,15.3,3307,40.846,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Singerei-07.txt
+2026-127,Șoldănești-2026-127,8301,46251,Șoldănești,Șoldănești,PSRM,PAS/PSRM,24.4,4797,18.696,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Soldanesti-04.txt
+2026-127,Șoldănești-2026-127,8327,46251,Poiana,Șoldănești,PAS,PAS,24.4,528,17.292,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Soldanesti-04.txt
+2026-127,Șoldănești-2026-127,8323,46251,Mihuleni,Șoldănești,PSRM,PSRM,24.4,348,9.374,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Soldanesti-04.txt
+2026-128,Nisporeni-2026-128,6001,46251,Nisporeni,Nisporeni,PAS,PAS,53.8,9140,92.016,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-01.txt
+2026-128,Nisporeni-2026-128,6044,46251,Soltănești,Nisporeni,PDCM,PDCM/PAS,53.8,965,12.542,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-01.txt
+2026-128,Nisporeni-2026-128,6054,46251,Vînători,Nisporeni,PAS,PAS,53.8,511,13.905,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-01.txt
+2026-128,Nisporeni-2026-128,6024,46251,Ciorești,Nisporeni,PLDM,PLDM,53.8,2165,37.612,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Nisporeni-01.txt
