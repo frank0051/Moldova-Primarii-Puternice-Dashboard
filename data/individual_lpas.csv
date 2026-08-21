@@ -330,8 +330,9 @@
 2026-100,Căușeni/Ialoveni-2026-100,2324,46234,Gangura,Ialoveni,PAS,PAS,14.3,1751,52.548,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
 2026-100,Căușeni/Ialoveni-2026-100,2337,46234,Văratic,Ialoveni,PDCM,PDCM,14.3,860,19.419,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
 2026-100,Căușeni/Ialoveni-2026-100,2330,46234,Pervomaisc,Căușeni,PSRM,PSRM,14.3,848,36.339,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Causeni-Ialoveni-01.txt
-2026-101,Orhei-2026-101,6412,46238,Biești,Orhei,Renaștere,PDCM/Renaștere,14.8,1675,47.474,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-01.txt
-2026-101,Orhei-2026-101,6420,46238,Chiperceni,Orhei,PNM,Renaștere/ALDE,14.8,1982,52.562,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-01.txt
+2026-101,Orhei-2026-101,6458,46238,Pohrebeni,Orhei,FASM,CUB,23.8,1861,46.282,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-01.txt
+2026-101,Orhei-2026-101,6412,46238,Biești,Orhei,Renaștere,PDCM/Renaștere,23.8,1675,47.474,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-01.txt
+2026-101,Orhei-2026-101,6420,46238,Chiperceni,Orhei,PNM,Renaștere/ALDE,23.8,1982,52.562,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-01.txt
 2026-102,Orhei-2026-102,6416,46238,Brăviceni,Orhei,PSDE,PAS,23.9,1384,30.617,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-06.txt
 2026-102,Orhei-2026-102,6449,46238,Mitoc,Orhei,PAS,PAS,23.9,1800,17.692,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-06.txt
 2026-102,Orhei-2026-102,6452,46238,Pelivan,Orhei,PAS,PAS,23.9,2397,27.424,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Orhei-06.txt
@@ -453,3 +454,17 @@
 2026-130,Sîngerei-2026-130,7427,46253,Ciuciuieni,Sîngerei,PSDE,PLDM/PSDE/PAS,59.5,814,23.073,1,1,https://www.facebook.com/reel/1731969558045367
 2026-130,Sîngerei-2026-130,7433,46253,Grigorăuca,Sîngerei,Ind.,PSRM/PCRM/PAS,59.5,1792,35.364,0,1,https://www.facebook.com/reel/1731969558045367
 2026-130,Sîngerei-2026-130,7401,46253,Sîngerei,Sîngerei,PAS,PAS,59.5,9954,82.843,0,0,https://www.facebook.com/reel/1731969558045367
+2026-131,Hîncești/Cimișlia-2026-131,5301,46254,Hîncești,Hîncești,PDCM,PDCM/PAS,48.8,11391,72.118,0,0,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-Cimislia-04.txt
+2026-131,Hîncești/Cimișlia-2026-131,5343,46254,Mereșeni,Hîncești,PDCM,PDCM/PAS/PSRM/PSDE,48.8,1531,45.75,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-Cimislia-04.txt
+2026-131,Hîncești/Cimișlia-2026-131,5331,46254,Fîrlădeni,Hîncești,PDCM,PDCM,48.8,535,17.211,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-Cimislia-04.txt
+2026-131,Hîncești/Cimișlia-2026-131,2927,46254,Ivanovca Nouă,Cimișlia,PSDE,PAS/PSDE/PSRM,48.8,400,11.576,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Hincesti-Cimislia-04.txt
+2026-132,Cahul-2026-132,9414,46255,Alexanderfeld,Cahul,Ind.,PSRM,18.9,831,62.234,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-08.txt
+2026-132,Cahul-2026-132,9417,46255,Găvănoasa,Cahul,PDMM,PDMM,18.9,1529,61.181,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-08.txt
+2026-132,Cahul-2026-132,1727,46255,Lebedenco,Cahul,PDMM,PDMM,18.9,1656,61.524,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-08.txt
+2026-132,Cahul-2026-132,9421,46255,Iujnoe,Cahul,PDMM,PDMM,18.9,422,17.33,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cahul-08.txt
+2026-133,Cantemir-2026-133,2101,46255,Cantemir,Cantemir,PN,PN/PAS,32.4,2655,2.693,0,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
+2026-133,Cantemir-2026-133,2145,46255,Plopi,Cantemir,CUB,CUB/PSRM,32.4,754,32.507,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
+2026-133,Cantemir-2026-133,2157,46255,Toceni,Cantemir,PAS,PAS,32.4,663,26.14,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
+2026-133,Cantemir-2026-133,2154,46255,Stoianovca,Cantemir,PSRM,PSRM,32.4,736,21.55,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
+2026-133,Cantemir-2026-133,2149,46255,Porumbești,Cantemir,PAS,PAS,32.4,1006,18.137,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
+2026-133,Cantemir-2026-133,2110,46255,Antonești,Cantemir,Ind.,PAS,32.4,948,27.312,1,1,https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/Other%20Sources/Cantemir-03.txt
