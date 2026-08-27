@@ -1,0 +1,30 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches: ["main"] # Change to "master" if your default branch is named master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Replaces __CARTO_API_KEY__ in decision-tracker.html with your GitHub Secret
+      - name: Inject CARTO API Key
+        env:
+          CARTO_KEY: ${{ secrets.carto_key }}
+        run: |
+          sed -i "s/__CARTO_API_KEY__/${CARTO_KEY}/g" decision-tracker.html
+          sed -i "s/__CARTO_API_KEY__/${CARTO_KEY}/g" new-level1-map.html
+
+      # Deploys the modified site to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
