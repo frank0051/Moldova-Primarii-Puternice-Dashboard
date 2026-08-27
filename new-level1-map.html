@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="description" content="Cluster Dissolve Map tracking voluntary administrative amalgamation clusters and municipal mergers under Moldova's Primării Puternice reform.">
+  <meta name="author" content="Government Reform Tracker">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://frank0051.github.io/Moldova-Primarii-Puternice-Dashboard/cluster-map.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+  <title>Primării Puternice Cluster Map</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Turf.js for Spatial Dissolve / Union -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
+
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+
+  <!-- HEADER NAVIGATION BAR -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 flex-shrink-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+        <span class="text-xl sm:text-2xl flex-shrink-0">🇲🇩</span>
+        <div class="truncate">
+          <h1 class="font-bold text-sm sm:text-lg leading-tight tracking-tight truncate">MOLDOVA: PRIMĂRII PUTERNICE</h1>
+          <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Cluster Dissolve & Amalgamation Map</p>
+        </div>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+        <a href="index.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Map & Finances">
+          <i class="fa-solid fa-map"></i>
+          <span class="hidden md:inline">Map & Finances</span>
+        </a>
+        <a href="clusterpolitics.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Political Matrix">
+          <i class="fa-solid fa-table-cells"></i>
+          <span class="hidden md:inline">Political Matrix</span>
+        </a>
+        <a href="decision-tracker.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Decision Pipeline">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span class="hidden md:inline">Decision Pipeline</span>
+        </a>
+        <a href="new-level1-map.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm flex items-center gap-1.5" title="Future State Map">
+          <i class="fa-solid fa-object-ungroup"></i>
+          <span class="hidden md:inline">Future State</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Control Toolbar -->
+  <div class="bg-white border-b border-gray-200 px-3 sm:px-6 py-2 flex-shrink-0 z-20 shadow-sm flex items-center justify-between text-xs">
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="relative w-56">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <input type="text" id="search-input" placeholder="Search Cluster, LPA, Raion..." class="w-full pl-8 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+      <select id="raion-filter" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <option value="ALL">All Raions</option>
+      </select>
+      <select id="scope-filter" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <option value="IN_SCOPE">In-Scope</option>
+        <option value="LT_3000">In-Scope &amp; &lt;3000 Pop.</option>
+        <option value="LT_1500">In-Scope &amp; &lt;1500 Pop.</option>
+        <option value="ALL">All (No Filter)</option>
+      </select>
+    </div>
+    <div class="text-gray-500 text-xs font-medium">
+      <span>Active Clusters: <strong id="cluster-count" class="text-gray-900">0</strong></span>
+    </div>
+  </div>
+
+  <!-- Mobile View Switcher Tabs -->
+  <div class="lg:hidden flex border-b border-gray-200 bg-slate-200 text-xs font-semibold text-slate-700 flex-shrink-0">
+    <button id="tab-btn-left" onclick="switchMobileTab('left')" class="flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors">
+      <i class="fa-solid fa-map-location-dot mr-1"></i> Current State
+    </button>
+    <button id="tab-btn-right" onclick="switchMobileTab('right')" class="flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors">
+      <i class="fa-solid fa-object-ungroup mr-1"></i> Potential Future State
+    </button>
+  </div>
+
+  <!-- Main Content Split (Two Maps) -->
+  <div class="flex-grow flex flex-col lg:flex-row overflow-hidden relative">
+    
+    <!-- LEFT PANEL: ORIGINAL INDIVIDUAL MAP -->
+    <div id="panel-left" class="w-full lg:w-1/2 h-full flex flex-col border-r border-gray-300 bg-white relative">
+      <div class="absolute top-2 right-2 z-[1000] bg-white/95 px-3 py-1 rounded-md shadow border border-gray-200 text-[11px] font-bold text-slate-700 pointer-events-none">
+        <i class="fa-solid fa-map text-blue-600 mr-1"></i> Current State Level 1 LPAs (w/ Status)
+      </div>
+      
+      <!-- Overlay Legend Floating on Bottom Right of Left Map -->
+      <details class="absolute bottom-2 right-2 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-300 rounded-lg shadow-md max-w-[220px] text-xs group" open>
+        <summary class="px-2.5 py-1.5 font-semibold text-slate-800 text-[11px] flex items-center justify-between cursor-pointer select-none">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-blue-600"></i> Legend</span>
+          <span class="text-[9px] text-gray-500 group-open:hidden">▾</span>
+          <span class="text-[9px] text-gray-500 hidden group-open:inline">▴</span>
+        </summary>
+        <div class="p-2 pt-0 grid grid-cols-1 gap-1 text-[10px]" id="legend-items-left"></div>
+      </details>
+
+      <div id="map-left" class="w-full h-full min-h-0"></div>
+    </div>
+
+    <!-- RIGHT PANEL: DISSOLVED CLUSTER MAP -->
+    <div id="panel-right" class="hidden lg:flex w-full lg:w-1/2 h-full bg-white flex-col relative">
+      <div class="absolute top-2 right-2 z-[1000] bg-white/95 px-3 py-1 rounded-md shadow border border-gray-200 text-[11px] font-bold text-slate-700 pointer-events-none">
+        <i class="fa-solid fa-object-ungroup text-emerald-600 mr-1"></i> Future State Level 1 LPAs (w/ Status)
+      </div>
+
+      <!-- Overlay Legend Floating on Bottom Right of Right Map -->
+      <details class="absolute bottom-2 right-2 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-300 rounded-lg shadow-md max-w-[220px] text-xs group" open>
+        <summary class="px-2.5 py-1.5 font-semibold text-slate-800 text-[11px] flex items-center justify-between cursor-pointer select-none">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-emerald-600"></i> Legend</span>
+          <span class="text-[9px] text-gray-500 group-open:hidden">▾</span>
+          <span class="text-[9px] text-gray-500 hidden group-open:inline">▴</span>
+        </summary>
+        <div class="p-2 pt-0 grid grid-cols-1 gap-1 text-[10px]" id="legend-items-right"></div>
+      </details>
+
+      <div id="map-right" class="w-full h-full min-h-0"></div>
+    </div>
+
+  </div>
+  
+  <!-- PERSISTENT FOOTER -->
+  <footer class="bg-slate-900 text-gray-400 text-[11px] px-4 py-2 flex-shrink-0 border-t border-slate-800">
+    <div class="space-y-1 text-left">
+      <p>Data based on public press releases. For official information visit <a href="https://primariiputernice.gov.md/" class="text-sky-400 hover:underline">https://primariiputernice.gov.md/</a></p>
+      <p>Frank Bracco, 2026. MIT License. Built with Leaflet, Turf.js, and Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <script>
+    const CSV_URL = 'https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/decision_tracker.csv';
+    const GEOJSON_URL = 'https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/uat3_post2025mergers_1.js';
+
+    const MOLDOVA_BOUNDS = [
+      [45.45, 26.60],
+      [48.50, 30.16]
+    ];
+
+    const STATUS_CONFIG = {
+      '0. Unclear or Not Initiated': { color: '#64748b', label: '0. Unclear' },
+      '1. Initiated': { color: '#38bdf8', label: '1. Initiated' },
+      '2. Working Group': { color: '#d97706', label: '2. Working Group' },
+      '3. Draft Consultation': { color: '#4f46e5', label: '3. Draft Consult.' },
+      '4. Final Meeting Scheduled': { color: '#9333ea', label: '4. Mtg Sched.' },
+      '5. Adopted': { color: '#10b981', label: '5. Adopted' }
+    };
+
+    let rawCsvData = [];
+    let csvLookup = {};
+    let mapLeft = null;
+    let mapRight = null;
+    let layerLeft = null;
+    let layerRight = null;
+    let rawGeoJsonData = null;
+
+    function getClusterName(row) {
+      if (!row) return null;
+      const val = row['In Cluster'] !== undefined ? row['In Cluster'] : row.In_Cluster;
+      if (val === undefined || val === null) return null;
+      const strVal = String(val).trim();
+      if (!strVal || strVal.toUpperCase() === 'FALSE') return null;
+      return strVal;
+    }
+
+    function initMaps() {
+      // Left Map
+      mapLeft = L.map('map-left', { zoomControl: false });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(mapLeft);
+      L.control.zoom({ position: 'topleft' }).addTo(mapLeft);
+
+      // Right Map
+      mapRight = L.map('map-right', { zoomControl: false });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(mapRight);
+      L.control.zoom({ position: 'topleft' }).addTo(mapRight);
+
+      mapLeft.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+      mapRight.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+
+      buildLegend();
+    }
+
+    function buildLegend() {
+      // Left Map Legend
+      const containerLeft = document.getElementById('legend-items-left');
+      if (containerLeft) {
+        containerLeft.innerHTML = Object.entries(STATUS_CONFIG).map(([statusKey, cfg]) => `
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-sm border inline-block flex-shrink-0" style="background-color: ${cfg.color}; border-color: rgba(0,0,0,0.15);"></span>
+            <span class="text-slate-700 font-medium truncate">${cfg.label}</span>
+          </div>
+        `).join('');
+      }
+
+      // Right Map Legend
+      const containerRight = document.getElementById('legend-items-right');
+      if (containerRight) {
+        let rightLegendHtml = `
+          <div class="flex items-center gap-1.5 pb-1 mb-1 border-b border-gray-200 font-semibold">
+            <span class="w-2.5 h-2.5 rounded-sm border inline-block flex-shrink-0" style="background-color: #ecf393; border-color: #1e293b; border-width: 1.5px;"></span>
+            <span class="text-slate-900 font-bold truncate">Merged Cluster</span>
+          </div>
+        `;
+        rightLegendHtml += Object.entries(STATUS_CONFIG).map(([statusKey, cfg]) => `
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-sm border inline-block flex-shrink-0" style="background-color: ${cfg.color}; border-color: rgba(0,0,0,0.15);"></span>
+            <span class="text-slate-700 font-medium truncate">${cfg.label}</span>
+          </div>
+        `).join('');
+        containerRight.innerHTML = rightLegendHtml;
+      }
+    }
+
+    function populateRaionFilter() {
+      const uniqueRaions = [...new Set(rawCsvData.map(r => r.Raion_Name).filter(Boolean))].sort();
+      const optionsHtml = '<option value="ALL">All Raions</option>' + uniqueRaions.map(r => `<option value="${r}">${r}</option>`).join('');
+      document.getElementById('raion-filter').innerHTML = optionsHtml;
+    }
+
+    async function loadData() {
+      try {
+        const csvResponse = await fetch(CSV_URL);
+        const csvText = await csvResponse.text();
+        const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+        rawCsvData = parsed.data;
+
+        rawCsvData.forEach(row => {
+          if (row.Cuatm) {
+            csvLookup[String(row.Cuatm).trim()] = row;
+          }
+        });
+
+        populateRaionFilter();
+
+        const jsResponse = await fetch(GEOJSON_URL);
+        const jsText = await jsResponse.text();
+        const jsonStart = jsText.indexOf('{');
+        const jsonEnd = jsText.lastIndexOf('}');
+        rawGeoJsonData = JSON.parse(jsText.substring(jsonStart, jsonEnd + 1));
+
+        renderMaps();
+        bindEvents();
+
+      } catch (err) {
+        console.error("Data loading failed:", err);
+      }
+    }
+
+    function getFeatureCutam(feature) {
+      const p = feature.properties || {};
+      const key = Object.keys(p).find(k => k.toLowerCase() === 'cutam' || k.toLowerCase() === 'cuatm' || k.toLowerCase() === 'natcode');
+      return p[key] ? String(p[key]).trim() : null;
+    }
+
+    function renderMaps() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+      const raionTerm = document.getElementById('raion-filter').value;
+      const scopeTerm = document.getElementById('scope-filter').value;
+
+      // 1. Render Left Map (Individual LPAs)
+      if (layerLeft) mapLeft.removeLayer(layerLeft);
+
+      layerLeft = L.geoJSON(rawGeoJsonData, {
+        filter: feature => {
+          const cutam = getFeatureCutam(feature);
+          const row = csvLookup[cutam];
+          if (!row) return false;
+
+          const clusterName = getClusterName(row) || '';
+          const matchesSearch = !searchTerm || 
+            (row.LPA_Name && row.LPA_Name.toLowerCase().includes(searchTerm)) || 
+            (row.Raion_Name && row.Raion_Name.toLowerCase().includes(searchTerm)) ||
+            clusterName.toLowerCase().includes(searchTerm);
+
+          const matchesRaion = raionTerm === 'ALL' || row.Raion_Name === raionTerm;
+
+          const rawPop = row.Pop_2024 || row['Population (2024 Census)'] || '';
+          const popNum = parseFloat(String(rawPop).replace(/,/g, '').trim());
+          let matchesScope = true;
+          if (scopeTerm === 'IN_SCOPE') {
+            matchesScope = String(row['In-Scope']).toUpperCase() === 'TRUE';
+          } else if (scopeTerm === 'LT_3000') {
+            matchesScope = !isNaN(popNum) && popNum < 3000 && String(row['In-Scope']).toUpperCase() === 'TRUE';
+          } else if (scopeTerm === 'LT_1500') {
+            matchesScope = !isNaN(popNum) && popNum < 1500 && String(row['In-Scope']).toUpperCase() === 'TRUE';
+          }
+
+          return matchesSearch && matchesRaion && matchesScope;
+        },
+        style: feature => {
+          const cutam = getFeatureCutam(feature);
+          const row = csvLookup[cutam];
+          const status = row ? row.Final_Status : '0. Unclear or Not Initiated';
+          const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+          return {
+            fillColor: cfg.color,
+            weight: 0.8,
+            opacity: 1,
+            color: '#ffffff',
+            fillOpacity: 0.75
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const cutam = getFeatureCutam(feature);
+          const row = csvLookup[cutam];
+          if (row) {
+            layer.bindPopup(`
+              <div style="font-family: sans-serif; min-width: 130px;">
+                <h4 style="margin: 0 0 4px 0; font-size: 12px; font-weight: bold; color: #1e293b;">${row.LPA_Name} (${row.Raion_Name})</h4>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Status:</strong> ${row.Final_Status}</p>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Cluster:</strong> ${getClusterName(row) || 'Unclustered'}</p>
+              </div>
+            `);
+          }
+        }
+      }).addTo(mapLeft);
+
+      // 2. Process and Render Right Map (Dissolved Clusters)
+      renderDissolvedRightMap(searchTerm, raionTerm, scopeTerm);
+    }
+
+    function renderDissolvedRightMap(searchTerm, raionTerm, scopeTerm) {
+      if (layerRight) mapRight.removeLayer(layerRight);
+
+      // Attach CSV properties to features
+      const enhancedFeatures = rawGeoJsonData.features.map(f => {
+        const cutam = getFeatureCutam(f);
+        const row = csvLookup[cutam] || {};
+        const clusterVal = getClusterName(row);
+        
+        return {
+          type: "Feature",
+          properties: {
+            ...f.properties,
+            ...row,
+            cuatm: cutam,
+            cluster_name: clusterVal,
+            is_clustered: clusterVal !== null
+          },
+          geometry: f.geometry
+        };
+      }).filter(f => {
+        if (!f.properties.Raion_Name) return false;
+        const matchesRaion = raionTerm === 'ALL' || f.properties.Raion_Name === raionTerm;
+        const clusterName = f.properties.cluster_name || '';
+        const matchesSearch = !searchTerm || 
+          (f.properties.LPA_Name && f.properties.LPA_Name.toLowerCase().includes(searchTerm)) || 
+          (f.properties.Raion_Name && f.properties.Raion_Name.toLowerCase().includes(searchTerm)) ||
+          clusterName.toLowerCase().includes(searchTerm);
+
+        const rawPop = f.properties.Pop_2024 || f.properties['Population (2024 Census)'] || '';
+        const popNum = parseFloat(String(rawPop).replace(/,/g, '').trim());
+        let matchesScope = true;
+        if (scopeTerm === 'IN_SCOPE') {
+          matchesScope = String(f.properties['In-Scope']).toUpperCase() === 'TRUE';
+        } else if (scopeTerm === 'LT_3000') {
+          matchesScope = !isNaN(popNum) && popNum < 3000 && String(f.properties['In-Scope']).toUpperCase() === 'TRUE';
+        } else if (scopeTerm === 'LT_1500') {
+          matchesScope = !isNaN(popNum) && popNum < 1500 && String(f.properties['In-Scope']).toUpperCase() === 'TRUE';
+        }
+
+        return matchesRaion && matchesSearch && matchesScope;
+      });
+
+      // Group clustered features by cluster name, keep unclustered as individual features
+      const clusterGroups = {};
+      const unclusteredFeatures = [];
+
+      enhancedFeatures.forEach(f => {
+        if (f.properties.is_clustered) {
+          const cName = f.properties.cluster_name;
+          if (!clusterGroups[cName]) clusterGroups[cName] = [];
+          clusterGroups[cName].push(f);
+        } else {
+          unclusteredFeatures.push(f);
+        }
+      });
+
+      const processedFeatures = [...unclusteredFeatures];
+      let activeClusterCount = Object.keys(clusterGroups).length;
+
+      // Dissolve boundaries for each cluster group using Turf.js
+      Object.entries(clusterGroups).forEach(([cName, group]) => {
+        try {
+          const fc = turf.featureCollection(group);
+          const flattenedFC = turf.flatten(fc);
+          const dissolved = turf.dissolve(flattenedFC, { propertyName: 'cluster_name' });
+          
+          dissolved.features.forEach(df => {
+            // 1. Remove interior holes
+            df.geometry = removeHoles(df.geometry);
+          
+            let totalPop = 0;
+            let totalArea = 0;
+            let lpaNames = [];
+            group.forEach(gf => {
+              const pop = parseFloat(String(gf.properties.Pop_2024 || gf.properties['Population (2024 Census)'] || 0).replace(/,/g, ''));
+              if (!isNaN(pop)) totalPop += pop;
+
+              const area = parseFloat(String(gf.properties.area_km2 || 0).replace(/,/g, ''));
+              if (!isNaN(area)) totalArea += area;
+
+              if (gf.properties.LPA_Name) lpaNames.push(gf.properties.LPA_Name);
+            });
+
+            df.properties = {
+              is_dissolved_cluster: true,
+              cluster_name: cName,
+              total_population: totalPop,
+              total_area_km2: totalArea,
+              lpa_count: group.length,
+              lpa_names: lpaNames.join(', ')
+            };
+            processedFeatures.push(df);
+          });
+        } catch (err) {
+          console.error("Dissolve failed for cluster:", cName, err);
+          group.forEach(gf => processedFeatures.push(gf));
+        }
+      });
+
+      document.getElementById('cluster-count').textContent = activeClusterCount;
+
+      const dissolvedCollection = turf.featureCollection(processedFeatures);
+
+      layerRight = L.geoJSON(dissolvedCollection, {
+        style: feature => {
+          const props = feature.properties;
+          if (props.is_dissolved_cluster) {
+            return {
+              fillColor: '#ecf393',
+              weight: 2,
+              opacity: 1,
+              color: '#1e293b',
+              fillOpacity: 0.75
+            };
+          } else {
+            const status = props.Final_Status || '0. Unclear or Not Initiated';
+            const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+            return {
+              fillColor: cfg.color,
+              weight: 0.8,
+              opacity: 1,
+              color: '#ffffff',
+              fillOpacity: 0.75
+            };
+          }
+        },
+        onEachFeature: (feature, layer) => {
+          const props = feature.properties;
+          if (props.is_dissolved_cluster) {
+            layer.bindPopup(`
+              <div style="font-family: sans-serif; min-width: 160px;">
+                <h4 style="margin: 0 0 4px 0; font-size: 12px; font-weight: bold; color: #1e293b;">Cluster: ${props.cluster_name}</h4>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Consolidated LPAs (${props.lpa_count}):</strong> ${props.lpa_names}</p>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Total Population:</strong> ${props.total_population.toLocaleString()}</p>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Total Area:</strong> ${props.total_area_km2.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 2 })} km²</p>
+              </div>
+            `);
+          } else {
+            const status = props.Final_Status || '0. Unclear or Not Initiated';
+            const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['0. Unclear or Not Initiated'];
+
+            const rawPop = props.Pop_2024 || props['Population (2024 Census)'] || 0;
+            const popNum = parseFloat(String(rawPop).replace(/,/g, '').trim());
+            const popDisplay = !isNaN(popNum) ? popNum.toLocaleString() : 'N/A';
+
+            const rawArea = props.area_km2 || 0;
+            const areaNum = parseFloat(String(rawArea).replace(/,/g, '').trim());
+            const areaDisplay = !isNaN(areaNum) ? areaNum.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 2 }) : 'N/A';
+
+            layer.bindPopup(`
+              <div style="font-family: sans-serif; min-width: 140px;">
+                <h4 style="margin: 0 0 4px 0; font-size: 12px; font-weight: bold; color: #1e293b;">${props.LPA_Name || 'Unclustered Unit'} (${props.Raion_Name || ''})</h4>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Status:</strong> <span style="color: ${cfg.color}; font-weight: 600;">${status}</span></p>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Population:</strong> ${popDisplay}</p>
+                <p style="margin: 2px 0; font-size: 11px;"><strong>Area:</strong> ${areaDisplay} km²</p>
+              </div>
+            `);
+          }
+        }
+      }).addTo(mapRight);
+    }
+	
+    function removeHoles(geometry) {
+      if (!geometry) return geometry;
+
+      if (geometry.type === 'Polygon') {
+        return {
+          type: 'Polygon',
+          coordinates: [geometry.coordinates[0]]
+        };
+      } else if (geometry.type === 'MultiPolygon') {
+        return {
+          type: 'MultiPolygon',
+          coordinates: geometry.coordinates.map(poly => [poly[0]])
+        };
+      }
+      return geometry;
+    }
+
+    function handleRaionChange() {
+      renderMaps();
+      const raionTerm = document.getElementById('raion-filter').value;
+      if (raionTerm === 'ALL') {
+        mapLeft.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+        mapRight.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+      } else {
+        if (layerLeft) {
+          const bounds = layerLeft.getBounds();
+          if (bounds.isValid()) {
+            mapLeft.fitBounds(bounds, { padding: [20, 20], maxZoom: 12 });
+            mapRight.fitBounds(bounds, { padding: [20, 20], maxZoom: 12 });
+          }
+        }
+      }
+    }
+
+    function bindEvents() {
+      document.getElementById('search-input').addEventListener('input', renderMaps);
+      document.getElementById('raion-filter').addEventListener('change', handleRaionChange);
+      document.getElementById('scope-filter').addEventListener('change', renderMaps);
+    }
+
+	// Helper function to re-calculate map bounds once revealed
+	function refitMap(map, layer) {
+	  const raionTerm = document.getElementById('raion-filter').value;
+	  if (raionTerm === 'ALL') {
+		map.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+	  } else if (layer) {
+		const bounds = layer.getBounds();
+		if (bounds.isValid()) {
+		  map.fitBounds(bounds, { padding: [20, 20], maxZoom: 12 });
+		} else {
+		  map.fitBounds(MOLDOVA_BOUNDS, { padding: [10, 10] });
+		}
+	  }
+	}
+
+	function switchMobileTab(tab) {
+	  const panelLeft = document.getElementById('panel-left');
+	  const panelRight = document.getElementById('panel-right');
+	  const btnLeft = document.getElementById('tab-btn-left');
+	  const btnRight = document.getElementById('tab-btn-right');
+
+	  if (tab === 'left') {
+		panelLeft.classList.remove('hidden');
+		panelRight.classList.add('hidden');
+		panelRight.classList.remove('flex');
+		
+		btnLeft.className = "flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors";
+		btnRight.className = "flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors";
+		
+		setTimeout(() => {
+		  mapLeft.invalidateSize();
+		  refitMap(mapLeft, layerLeft);
+		}, 150);
+	  } else {
+		panelLeft.classList.add('hidden');
+		panelRight.classList.remove('hidden');
+		panelRight.classList.add('flex');
+		
+		btnRight.className = "flex-1 py-2 text-center bg-white border-b-2 border-blue-600 text-blue-600 transition-colors";
+		btnLeft.className = "flex-1 py-2 text-center bg-slate-100 text-slate-600 border-b-2 border-transparent transition-colors";
+		
+		setTimeout(() => {
+		  mapRight.invalidateSize();
+		  refitMap(mapRight, layerRight);
+		}, 150);
+	  }
+	}
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMaps();
+      loadData();
+    });
+  </script>
+</body>
+</html>

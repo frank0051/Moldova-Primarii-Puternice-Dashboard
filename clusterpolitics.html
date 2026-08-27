@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Landscape - Moldova Primării Puternice Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	
+	<meta name="description" content="Interactive dashboard tracking voluntary administrative amalgamation clusters, population impact, financial stimuli, and municipal mergers under Moldova's Primării Puternice reform.">
+    <meta name="keywords" content="Moldova, Primarii Puternice, Voluntary Amalgamation, Administrative Reform, LPAs, Raion, Amalgamare Voluntară, Local Public Administration">
+    <meta name="author" content="Government Reform Tracker">
+    <meta name="robots" content="index, follow">
+
+    <link rel="canonical" href="https://frank0051.github.io/Moldova-Primarii-Puternice-Dashboard/clusterpolitics.html">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+</head>
+<body class="bg-gray-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+<!-- Welcome Announcement Modal -->
+<div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 mx-4 relative transform transition-all">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center pb-3 border-b border-gray-200">
+      <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+        <span>📢</span> Announcement & Disclaimer
+      </h3>
+      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none">&times;</button>
+    </div>
+
+    <!-- Announcement Content -->
+    <div class="py-4 text-xs text-gray-600 space-y-3 max-h-80 overflow-y-auto">
+      <p class="font-medium text-gray-700">Welcome to the PRIMĂRII PUTERNICE dashboard!</p>
+		<h1 class="font-bold text-lg">5:30PM, 25 August 2026: Over 540 LPAs have joined PRIMĂRII PUTERNICE - an <a href="new-level1-map.html">initial future state map</a> is now available.</h1>
+      <p>Please note the following important announcements and disclaimers before proceeding:</p>
+      <ul class="list-disc pl-4 space-y-1">
+		<li>On 11 August 2026, the Government announced its intention to transform Taraclia raion into a level 2 municipality centered around level 1 Taraclia in order to provide additional support to the Bulgarian minority communities.
+		<li>Chisinau Level 1 LPAs are begun to adopt amalgamation decisions, as such the decision pipeline filter has been updated to include level 1 Chisinau LPAs (excluding Mun. Chisinau itself).</li>
+        <li>On 28 July 2026, Parliament set an official, legal deadline for this round of voluntary amalgmation to ensure all changes are made with ample time before elections. The legal deadline for LPAs to submit is now 31 August 2026.</li>
+        <li>This document utilizes the local decisions register and press releases to monitor progress bottom-up; as such, this dashboard lags official "aggregate" number announcements.</li>
+      </ul>
+    </div>
+
+    <!-- Footer / Actions -->
+    <div class="pt-3 border-t border-gray-200 flex justify-end">
+      <button onclick="closeModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+        I Understand
+      </button>
+    </div>
+
+  </div>
+</div>
+
+    <!-- HEADER NAVIGATION BAR -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🇲🇩</span>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-tight">MOLDOVA: PRIMĂRII PUTERNICE</h1>
+                    <p class="text-xs text-slate-400">Political Landscape & Voluntary Amalgamation Alignment (Updated: <span id="last-updated"></span>)</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+			  <nav class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+				<a href="index.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Map & Finances">
+				  <i class="fa-solid fa-map"></i>
+				  <span class="hidden md:inline">Map & Finances</span>
+				</a>
+				<a href="clusterpolitics.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm flex items-center gap-1.5" title="Political Matrix">
+				  <i class="fa-solid fa-table-cells"></i>
+				  <span class="hidden md:inline">Political Matrix</span>
+				</a>
+				<a href="decision-tracker.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Decision Pipeline">
+				  <i class="fa-solid fa-diagram-project"></i>
+				  <span class="hidden md:inline">Decision Pipeline</span>
+				</a>
+				<a href="new-level1-map.html" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition-colors flex items-center gap-1.5" title="Future State Map">
+				  <i class="fa-solid fa-object-ungroup"></i>
+				  <span class="hidden md:inline">Future State</span>
+				</a>
+			  </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ZONE 1: MACRO POLITICAL KPI BANNER -->
+        <section class="mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- 1. Total Clusters -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Total Clusters</span>
+                        <i class="fa-solid fa-diagram-project text-blue-500 text-lg"></i>
+                    </div>
+                    <div id="kpi-total-clusters" class="text-3xl font-extrabold text-slate-900">--</div>
+                    <p class="text-xs text-slate-500 mt-1">Active reform units</p>
+                </div>
+
+                <!-- 2. Total LPAs -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Total LPAs</span>
+                        <i class="fa-solid fa-building-columns text-slate-600 text-lg"></i>
+                    </div>
+                    <div id="kpi-total-lpas" class="text-3xl font-extrabold text-slate-900">--</div>
+                    <p class="text-xs text-slate-500 mt-1">Participating municipalities</p>
+                </div>
+
+                <!-- 3. Single Party Mayoralty Clusters -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Same Mayor Party</span>
+                        <i class="fa-solid fa-user-tie text-indigo-500 text-lg"></i>
+                    </div>
+                    <div id="kpi-mayor-monocolor" class="text-3xl font-extrabold text-indigo-600">--</div>
+                    <p class="text-xs text-slate-500 mt-1">Clusters where all mayors are same party</p>
+                </div>
+
+                <!-- 4. Single Party Council Clusters -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Same Council Majority</span>
+                        <i class="fa-solid fa-users text-teal-500 text-lg"></i>
+                    </div>
+                    <div id="kpi-council-monocolor" class="text-3xl font-extrabold text-teal-600">--</div>
+                    <p class="text-xs text-slate-500 mt-1">Clusters with each council has the same majority</p>
+                </div>
+
+                <!-- 5. Single Party Mayor & Council Clusters -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Mayor & Council Unified</span>
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                    </div>
+                    <div id="kpi-unified-monocolor" class="text-3xl font-extrabold text-emerald-600">--</div>
+                    <p class="text-xs text-slate-500 mt-1">Clusters with 100% single party across mayors & councils</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ZONE 2: MATRIX CONTROLS & FILTERS -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                
+                <!-- Search & Filters -->
+                <div class="flex flex-wrap items-center gap-3 flex-1">
+                    <!-- Text Search -->
+                    <div class="relative min-w-[240px] flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="matrix-search" oninput="renderPoliticalMatrix()" placeholder="Search cluster ID, name, or LPA..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    </div>
+
+                    <!-- Raion Dropdown -->
+                    <select id="matrix-raion-filter" onchange="renderPoliticalMatrix()" class="px-3 py-2 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="All">All Raions</option>
+                    </select>
+
+                    <!-- Alignment Filter -->
+                    <select id="matrix-alignment-filter" onchange="renderPoliticalMatrix()" class="px-3 py-2 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="All">All Alignment Types</option>
+                        <option value="Monocolor">🟢 100% Monocolor</option>
+                        <option value="Majority">🔵 Single-Party Majority</option>
+                        <option value="Cross-Party">🟡 Cross-Party</option>
+                    </select>
+                </div>
+
+                <!-- View Mode Segmented Control -->
+				<div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-1 text-xs font-semibold self-start md:self-auto">
+					<button id="btn-mode-mayor" onclick="setMatrixMode('mayor')" class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition-all">
+						<i class="fa-solid fa-user-tie mr-1"></i> Mayor Affiliation
+					</button>
+					<button id="btn-mode-council" onclick="setMatrixMode('council')" class="px-3 py-1.5 rounded-md bg-white shadow-sm text-blue-700 font-bold transition-all">
+						<i class="fa-solid fa-users mr-1"></i> Council Dominance
+					</button>
+				</div>
+            </div>
+        </section>
+
+
+        <!-- ZONE 3: CROSS-TAB POLITICAL MATRIX -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead id="matrix-table-head">
+                        <!-- Dynamic table headers rendered via JavaScript -->
+                    </thead>
+                    <tbody id="matrix-table-body" class="divide-y divide-slate-200">
+                        <!-- Dynamic matrix rows rendered via JavaScript -->
+                    </tbody>
+                    <tfoot id="matrix-table-foot" class="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300">
+                        <!-- Sticky totals rows -->
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+	<footer class="bg-gray-800 text-gray-400 text-xs px-6 py-4 flex flex-col sm:flex-row justify-between items-center mt-auto border-t border-gray-700">
+		<div class="space-y-1 text-left">
+			<p>Data based on public press releases. For official information visit <a href="https://primariiputernice.gov.md/" class="text-sky-400 hover:underline">https://primariiputernice.gov.md/</a></p>
+			<p>Frank Bracco, 2026. MIT License. Also uses Leaflet, PapaParse, and tailwindcss under permissive open source licensing. <a style="text-decoration: underline;" href="https://github.com/frank0051/Moldova-Primarii-Puternice-Dashboard/issues">Report issues on Github.</a></p>
+		</div>
+	</footer>
+
+
+    <!-- JAVASCRIPT AGGREGATION & RENDER ENGINE -->
+    <script>
+        let rawLpaData = [];
+        let currentMatrixMode = 'council'; // 'mayor' or 'council'
+		let currentSortColumn = 'name'; // Active sort column ('name', 'lpas', 'PAS', 'PLDM', etc.)
+		let currentSortDirection = 'asc'; // 'asc' or 'desc'
+		
+		// Handle Column Header Clicks
+		function handleSort(columnKey) {
+			if (currentSortColumn === columnKey) {
+				currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+			} else {
+				currentSortColumn = columnKey;
+				// Text columns default to ASC, numerical/party columns default to DESC
+				currentSortDirection = (columnKey === 'name' || columnKey === 'alignment') ? 'asc' : 'desc';
+			}
+			renderPoliticalMatrix();
+		}
+
+        // Load CSV data automatically on page load
+		const csvUrl = "https://raw.githubusercontent.com/frank0051/Moldova-Primarii-Puternice-Dashboard/refs/heads/main/data/individual_lpas.csv";
+		updateLastUpdatedDate(csvUrl);
+		
+        document.addEventListener('DOMContentLoaded', () => {
+            Papa.parse(csvUrl, {
+                download: true,
+                header: true,
+                dynamicTyping: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    rawLpaData = results.data;
+                    populateRaionDropdown();
+                    updateMacroKPIs();
+                    renderPoliticalMatrix();
+                },
+                error: function(err) {
+                    console.error("Error loading individual_lpas.csv:", err);
+                }
+            });
+        });
+
+        // Set View Mode Toggle
+        function setMatrixMode(mode) {
+            currentMatrixMode = mode;
+            document.getElementById('btn-mode-mayor').className = mode === 'mayor' 
+                ? "px-3 py-1.5 rounded-md bg-white shadow-sm text-blue-700 font-bold transition-all" 
+                : "px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition-all";
+            document.getElementById('btn-mode-council').className = mode === 'council' 
+                ? "px-3 py-1.5 rounded-md bg-white shadow-sm text-blue-700 font-bold transition-all" 
+                : "px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition-all";
+            renderPoliticalMatrix();
+        }
+
+        // Calculate Alignment Status & Badge
+        function getAlignmentStatus(parties, totalLpas) {
+            let maxSingleParty = null;
+            let maxCount = -1;
+            let secondCount = -1;
+
+            // Find top single political party (excluding 'No Majority')
+            Object.keys(parties).forEach(party => {
+                if (party === 'No Majority') return;
+                const count = parties[party] || 0;
+                if (count > maxCount) {
+                    secondCount = maxCount;
+                    maxCount = count;
+                    maxSingleParty = party;
+                } else if (count > secondCount) {
+                    secondCount = count;
+                }
+            });
+
+            // 1. 100% Single Party Alignment
+            if (maxSingleParty && maxCount === totalLpas) {
+                return {
+                    type: 'Monocolor',
+                    badge: `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 100% ${maxSingleParty}</span>`
+                };
+            } 
+            // 2. Strict Single-Party Majority (> 50% threshold)
+            else if (maxSingleParty && (maxCount / totalLpas) > 0.5) {
+                return {
+                    type: 'Majority',
+                    badge: `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-100 text-blue-800 border border-blue-200">🔵 ${maxSingleParty} Majority</span>`
+                };
+            } 
+            // 3. Cross-Party Coalition / Split Councils
+            else {
+                const noMajCount = parties['No Majority'] || 0;
+                let badgeText = '🟡 Cross-Party';
+                if (noMajCount === totalLpas) {
+                    badgeText = '🟡 Split Councils';
+                } else if ((noMajCount / totalLpas) > 0.5) {
+                    badgeText = `🟡 Split Majority (${noMajCount}/${totalLpas})`;
+                }
+                return {
+                    type: 'Cross-Party',
+                    badge: `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200">${badgeText}</span>`
+                };
+            }
+        }
+
+        // Calculate & Populate Zone 1 Macro KPIs
+        function updateMacroKPIs() {
+            const mayorClusterMap = groupDataByCluster(rawLpaData, 'mayor');
+            const councilClusterMap = groupDataByCluster(rawLpaData, 'council');
+            
+            const clusterIds = Object.keys(mayorClusterMap);
+            
+            let mayorMonocolorCount = 0;
+            let councilMonocolorCount = 0;
+            let unifiedMonocolorCount = 0;
+
+            clusterIds.forEach(cid => {
+                const mayorCluster = mayorClusterMap[cid];
+                const councilCluster = councilClusterMap[cid];
+                const totalLpas = mayorCluster.lpas.length;
+
+                // Mayor Monocolor Check
+                const mayorAlign = getAlignmentStatus(mayorCluster.parties, totalLpas);
+                const isMayorMono = (mayorAlign.type === 'Monocolor');
+
+                // Council Monocolor Check
+                const councilAlign = getAlignmentStatus(councilCluster.parties, totalLpas);
+                const isCouncilMono = (councilAlign.type === 'Monocolor');
+
+                if (isMayorMono) mayorMonocolorCount++;
+                if (isCouncilMono) councilMonocolorCount++;
+                if (isMayorMono && isCouncilMono) unifiedMonocolorCount++;
+            });
+
+            document.getElementById('kpi-total-clusters').textContent = clusterIds.length;
+            document.getElementById('kpi-total-lpas').textContent = rawLpaData.length;
+            document.getElementById('kpi-mayor-monocolor').textContent = mayorMonocolorCount;
+            document.getElementById('kpi-council-monocolor').textContent = councilMonocolorCount;
+            document.getElementById('kpi-unified-monocolor').textContent = unifiedMonocolorCount;
+        }
+
+        // Group rows into Cluster Objects
+        function groupDataByCluster(data, mode) {
+            const clusterMap = {};
+
+            data.forEach(row => {
+                if (!row.Cluster_ID) return;
+                const cid = row.Cluster_ID;
+                if (!clusterMap[cid]) {
+                    clusterMap[cid] = {
+                        id: cid,
+                        name: row.Cluster_Name,
+                        raion: row.Raion,
+                        lpas: [],
+                        parties: { PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PN: 0, PLDM: 0,  Other: 0, 'No Majority': 0 }
+                    };
+                }
+                clusterMap[cid].lpas.push(row);
+
+                // Extract party affiliation or handle split council value
+                const val = mode === 'mayor' ? row.Mayor_Party : row.Council_Party;
+                const rawParty = val ? String(val).trim() : '';
+
+                if (mode === 'council' && rawParty.includes('/')) {
+                    clusterMap[cid].parties['No Majority']++;
+                } else {
+                    const targetParty = rawParty || 'Ind.';
+                    if (['PAS', 'PSRM', 'PSDE', 'Ind.', 'PDCM', 'PN', 'PLDM'].includes(targetParty)) {
+                        clusterMap[cid].parties[targetParty]++;
+                    } else {
+                        clusterMap[cid].parties.Other++;
+                    }
+                }
+            });
+
+            return clusterMap;
+        }
+
+        // Dynamically update <thead> with interactive sorting controls
+		function updateTableHeaders() {
+			const thead = document.getElementById('matrix-table-head');
+			const showNoMaj = (currentMatrixMode === 'council');
+
+			// Helper to render a clickable header with sort direction icon
+			const sortHeader = (key, label, extraClass = '') => {
+				let icon = '<span class="text-slate-300 ml-1">↕</span>';
+				if (currentSortColumn === key) {
+					icon = currentSortDirection === 'asc' 
+						? '<span class="text-blue-600 font-bold ml-1">↑</span>' 
+						: '<span class="text-blue-600 font-bold ml-1">↓</span>';
+				}
+				return `
+					<th onclick="handleSort('${key}')" class="py-3.5 px-3 cursor-pointer hover:bg-slate-200/70 select-none transition-colors ${extraClass}">
+						<div class="flex items-center justify-center gap-0.5">
+							<span>${label}</span>
+							${icon}
+						</div>
+					</th>`;
+			};
+
+			thead.innerHTML = `
+				<tr class="bg-slate-100 border-b border-slate-200 font-bold text-slate-700 uppercase tracking-wider">
+					<th onclick="handleSort('name')" class="py-3.5 px-4 min-w-[200px] cursor-pointer hover:bg-slate-200/70 select-none transition-colors text-left">
+						<div class="flex items-center justify-between">
+							<span>Cluster & Raion</span>
+							${currentSortColumn === 'name' ? (currentSortDirection === 'asc' ? '<span class="text-blue-600">↑</span>' : '<span class="text-blue-600">↓</span>') : '<span class="text-slate-300">↕</span>'}
+						</div>
+					</th>
+					${sortHeader('lpas', 'LPAs')}
+					${sortHeader('PAS', 'PAS', 'bg-amber-50/80 text-amber-900 border-x border-amber-200/60')}
+					${sortHeader('PSRM', 'PSRM', 'bg-red-50/80 text-red-900 border-r border-red-200/60')}
+					${sortHeader('PSDE', 'PSDE', 'bg-blue-50/80 text-blue-900 border-r border-blue-200/60')}
+					${sortHeader('Ind.', 'Ind.', 'bg-slate-200/50 text-slate-800 border-r border-slate-300/60')}
+					${sortHeader('PDCM', 'PDCM', 'bg-purple-50/80 text-purple-900 border-r border-purple-200/60')}
+					${sortHeader('PN', 'PN', 'bg-teal-50/80 text-teal-900 border-r border-teal-200/60')}
+					${sortHeader('PLDM', 'PLDM', 'bg-green-50/80 text-green-900 border-r border-green-200/60')}
+					${sortHeader('Other', 'Other', 'bg-zinc-100 text-zinc-800 border-r border-zinc-200')}
+					${showNoMaj ? sortHeader('No Majority', 'No Majority', 'bg-orange-50/80 text-orange-900 border-r border-orange-200/60') : ''}
+					${sortHeader('alignment', 'Alignment Status', 'text-left')}
+					<th class="py-3.5 px-3 text-center">Details</th>
+				</tr>
+			`;
+		}
+
+        // Render Zone 3 Cross-Tab Matrix
+        function renderPoliticalMatrix() {
+            updateTableHeaders();
+
+            const tbody = document.getElementById('matrix-table-body');
+            const tfoot = document.getElementById('matrix-table-foot');
+            const searchQuery = document.getElementById('matrix-search').value.toLowerCase();
+            const raionFilter = document.getElementById('matrix-raion-filter').value;
+            const alignFilter = document.getElementById('matrix-alignment-filter').value;
+
+            const clusterMap = groupDataByCluster(rawLpaData, currentMatrixMode);
+            let clusters = Object.values(clusterMap);
+
+            // Filter by Raion
+            if (raionFilter !== 'All') {
+                clusters = clusters.filter(c => c.raion && c.raion.split('/').map(r => r.trim()).includes(raionFilter));
+            }
+
+            // Filter by Search Query
+            if (searchQuery) {
+                clusters = clusters.filter(c => 
+                    c.id.toLowerCase().includes(searchQuery) ||
+                    (c.name && c.name.toLowerCase().includes(searchQuery)) ||
+                    (c.raion && c.raion.toLowerCase().includes(searchQuery)) ||
+                    c.lpas.some(l => l.Name && l.Name.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            // Filter by Alignment Type
+            if (alignFilter !== 'All') {
+                clusters = clusters.filter(c => {
+                    const totalLpas = c.lpas.length;
+                    const alignment = getAlignmentStatus(c.parties, totalLpas);
+                    return alignment.type === alignFilter;
+                });
+            }
+			
+			// Sort clusters array dynamically based on selected column and direction
+			clusters.sort((a, b) => {
+				let valA, valB;
+
+				if (currentSortColumn === 'name') {
+					// Combines Cluster Name + Raion for full alphabetical sorting
+					valA = `${a.name} ${a.raion}`.toLowerCase();
+					valB = `${b.name} ${b.raion}`.toLowerCase();
+				} else if (currentSortColumn === 'lpas') {
+					valA = a.lpas.length;
+					valB = b.lpas.length;
+				} else if (currentSortColumn === 'alignment') {
+					valA = getAlignmentStatus(a.parties, a.lpas.length).type;
+					valB = getAlignmentStatus(b.parties, b.lpas.length).type;
+				} else {
+					// Party count sorting
+					valA = a.parties[currentSortColumn] || 0;
+					valB = b.parties[currentSortColumn] || 0;
+				}
+
+				if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
+				if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
+				return 0;
+			});
+
+            tbody.innerHTML = '';
+            const totals = { lpas: 0, PAS: 0, PSRM: 0, PSDE: 0, 'Ind.': 0, PDCM: 0, PN: 0, PLDM: 0, Other: 0 , 'No Majority': 0};
+            const showNoMaj = (currentMatrixMode === 'council');
+            const totalCols = showNoMaj ? 13 : 12;
+
+            if (clusters.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${totalCols}" class="py-8 text-center text-slate-400">
+                            No clusters match the selected criteria.
+                        </td>
+                    </tr>`;
+                tfoot.innerHTML = '';
+                return;
+            }
+
+            clusters.forEach(c => {
+                const totalLpas = c.lpas.length;
+                totals.lpas += totalLpas;
+                Object.keys(c.parties).forEach(p => totals[p] += c.parties[p]);
+
+                const alignment = getAlignmentStatus(c.parties, totalLpas);
+
+                const rowHtml = `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-3 px-4 font-medium text-slate-900">
+                            <div class="font-bold text-slate-800 text-xs">${c.name}</div>
+                            <div class="text-[11px] text-slate-500">${c.raion} <span class="text-slate-400">(${c.id})</span></div>
+                        </td>
+                        <td class="py-3 px-3 text-center font-semibold text-slate-700">${totalLpas}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PAS, 'bg-amber-100 text-amber-800 border-amber-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PSRM, 'bg-red-100 text-red-800 border-red-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PSDE, 'bg-blue-100 text-blue-800 border-blue-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties['Ind.'], 'bg-slate-200 text-slate-800 border-slate-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PDCM, 'bg-purple-100 text-purple-800 border-purple-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PN, 'bg-teal-100 text-teal-800 border-teal-300')}</td>
+                        <td class="py-3 px-3 text-center">${renderCellBadge(c.parties.PLDM, 'bg-green-100 text-green-800 border-green-300')}</td>
+						<td class="py-3 px-3 text-center">${renderCellBadge(c.parties.Other, 'bg-zinc-200 text-zinc-800 border-zinc-300')}</td>
+                        ${showNoMaj ? `<td class="py-3 px-3 text-center">${renderCellBadge(c.parties['No Majority'], 'bg-orange-100 text-orange-800 border-orange-300')}</td>` : ''}
+                        
+                        <td class="py-3 px-4">${alignment.badge}</td>
+                        <td class="py-3 px-2 text-center">
+                            <button onclick="toggleRowAccordion('${c.id}')" class="px-1 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded text-[11px] font-semibold transition-colors">
+                                Details ▾
+                            </button>
+                        </td>
+                    </tr>
+                    <tr id="accordion-${c.id}" class="hidden bg-slate-50/90 border-y border-slate-200">
+                        <td colspan="${totalCols}" class="p-4">
+                            <div class="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2.5">
+                                Constituent Municipalities (${c.name})
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                                ${c.lpas.map(lpa => `
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs shadow-sm">
+                                        <div class="flex items-center justify-between font-bold text-slate-900 mb-1">
+                                            <span>${lpa.Name}</span>
+                                            <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">CUTAM: ${lpa.CUTAM}</span>
+                                        </div>
+                                        <div class="text-slate-600 space-y-0.5">
+                                            <div>Mayor Party: <strong class="text-slate-800">${lpa.Mayor_Party || 'N/A'}</strong></div>
+                                            <div>Council Dominance: <strong class="text-slate-800">${lpa.Council_Party || 'N/A'}</strong></div>
+                                        </div>
+                                        <div class="mt-2 pt-1.5 border-t border-slate-100 text-[10px] text-slate-500 flex justify-between">
+                                            <span>Pop: ${lpa['Population (2024)'] ? Number(lpa['Population (2024)']).toLocaleString() : '--'}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+
+            // Calculate percentage share relative to active total LPAs
+            const formatPct = (count) => totals.lpas > 0 ? ((count / totals.lpas) * 100).toFixed(1) + '%' : '0.0%';
+
+            // Table Foot Totals
+            tfoot.innerHTML = `
+                <tr class="border-b border-slate-200">
+                    <td class="py-3 px-4 font-bold text-slate-900">Total (${clusters.length} Clusters)</td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">${totals.lpas}</td>
+                    <td class="py-3 px-3 text-center font-bold text-amber-900">${totals.PAS}</td>
+                    <td class="py-3 px-3 text-center font-bold text-red-900">${totals.PSRM}</td>
+                    <td class="py-3 px-3 text-center font-bold text-blue-900">${totals.PSDE}</td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-800">${totals['Ind.']}</td>
+                    <td class="py-3 px-3 text-center font-bold text-purple-900">${totals.PDCM}</td>
+                    <td class="py-3 px-3 text-center font-bold text-teal-900">${totals.PN}</td>
+                    <td class="py-3 px-3 text-center font-bold text-green-900">${totals.PLDM}</td>
+					<td class="py-3 px-3 text-center font-bold text-zinc-800">${totals.Other}</td>
+                    ${showNoMaj ? `<td class="py-3 px-3 text-center font-bold text-orange-900">${totals['No Majority']}</td>` : ''}
+
+                    <td colspan="2" class="py-3 px-4 text-[11px] font-normal text-slate-500">Sums updated across active view filters</td>
+                </tr>
+                <tr class="bg-slate-50/80 text-slate-600 font-semibold text-[11px]">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">% of Total LPAs</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-slate-700">100.0%</td>
+                    <td class="py-2.5 px-3 text-center text-amber-800">${formatPct(totals.PAS)}</td>
+                    <td class="py-2.5 px-3 text-center text-red-800">${formatPct(totals.PSRM)}</td>
+                    <td class="py-2.5 px-3 text-center text-blue-800">${formatPct(totals.PSDE)}</td>
+                    <td class="py-2.5 px-3 text-center text-slate-700">${formatPct(totals['Ind.'])}</td>
+                    <td class="py-2.5 px-3 text-center text-purple-800">${formatPct(totals.PDCM)}</td>
+                    <td class="py-2.5 px-3 text-center text-teal-800">${formatPct(totals.PN)}</td>
+                    <td class="py-2.5 px-3 text-center text-green-800">${formatPct(totals.PLDM)}</td>
+					<td class="py-2.5 px-3 text-center text-zinc-700">${formatPct(totals.Other)}</td>
+                    ${showNoMaj ? `<td class="py-2.5 px-3 text-center text-orange-800">${formatPct(totals['No Majority'])}</td>` : ''}
+                    <td colspan="2" class="py-2.5 px-4 text-[11px] font-normal text-slate-400">Share of filtered LPAs</td>
+                </tr>
+            `;
+        }
+
+        // Cell Badge Helper
+        function renderCellBadge(count, colorStyle) {
+            if (!count || count === 0) return '<span class="text-slate-300">-</span>';
+            return `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs border ${colorStyle}">${count}</span>`;
+        }
+
+        // Toggle Nested Accordion Rows
+        function toggleRowAccordion(clusterId) {
+            const row = document.getElementById(`accordion-${clusterId}`);
+            if (row) row.classList.toggle('hidden');
+        }
+
+        // Dynamically Populate Raion Select Options
+        function populateRaionDropdown() {
+            const select = document.getElementById('matrix-raion-filter');
+            const raions = new Set();
+            rawLpaData.forEach(r => {
+                if (r.Raion) {
+                    r.Raion.split('/').forEach(x => raions.add(x.trim()));
+                }
+            });
+            [...raions].sort((a,b) => a.localeCompare(b)).forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r; 
+                opt.textContent = r;
+                select.appendChild(opt);
+            });
+        }
+		
+		// Dynamically fetches and updates the "Last Updated" display using GitHub metadata
+		function getGitHubApiUrl(rawURL) {
+			try {
+				const url = new URL(rawURL);
+				if (url.hostname === 'raw.githubusercontent.com') {
+					const parts = url.pathname.split('/').filter(Boolean);
+					const owner = parts[0];
+					const repo = parts[1];
+					
+					let branchIndex = 2;
+					if (parts[2] === 'refs' && parts[3] === 'heads') {
+						branchIndex = 4;
+					}
+					
+					const branch = parts[branchIndex];
+					const filePath = parts.slice(branchIndex + 1).join('/');
+					
+					return `https://api.github.com/repos/${owner}/${repo}/commits?path=${filePath}&sha=${branch}&per_page=1`;
+				}
+			} catch (e) {
+				console.error("Error parsing rawURL for GitHub API:", e);
+			}
+			return null;
+		}
+
+		async function updateLastUpdatedDate(rawURL) {
+			let dateToUse = null;
+
+			try {
+				const apiURL = getGitHubApiUrl(rawURL);
+				if (apiURL) {
+					const response = await fetch(apiURL);
+					if (response.ok) {
+						const commits = await response.json();
+						if (commits && commits.length > 0) {
+							dateToUse = new Date(commits[0].commit.committer.date);
+						}
+					} else {
+						console.warn(`GitHub Commits API returned status ${response.status}. Trying fallbacks.`);
+					}
+				}
+			} catch (error) {
+				console.warn("GitHub Commits API failed. Trying fallbacks:", error);
+			}
+
+			if (!dateToUse) {
+				try {
+					const relativePath = "./data/individual_lpas.csv"; 
+					const response = await fetch(relativePath, { method: 'HEAD' });
+					const lastModified = response.headers.get('Last-Modified');
+					if (lastModified) {
+						dateToUse = new Date(lastModified);
+					}
+				} catch (error) {
+					console.warn("Failed same-origin relative check. Trying final fallback:", error);
+				}
+			}
+
+			if (!dateToUse) {
+				try {
+					const response = await fetch(rawURL, { method: 'HEAD' });
+					const lastModified = response.headers.get('Last-Modified');
+					if (lastModified) {
+						dateToUse = new Date(lastModified);
+					}
+				} catch (error) {
+					console.warn("All date retrieval methods failed:", error);
+				}
+			}
+
+			if (dateToUse && !isNaN(dateToUse.getTime())) {
+				const day = dateToUse.getDate();
+				const month = dateToUse.toLocaleDateString('en-US', { month: 'long' });
+				const year = dateToUse.getFullYear();
+				const formattedDate = `${day} ${month} ${year}`;
+				
+				const element = document.getElementById('last-updated');
+				if (element) {
+					element.innerText = formattedDate;
+				}
+			} else {
+				console.warn("Could not determine Last-Modified date. Keeping static HTML fallback.");
+			}
+		}
+
+		
+		document.addEventListener('DOMContentLoaded', () => {
+		// Always show the modal on page load
+		  document.getElementById('welcome-modal').classList.remove('hidden');
+		});
+
+		function closeModal() {
+		  document.getElementById('welcome-modal').classList.add('hidden');
+		}
+    </script>
+</body>
+</html>
